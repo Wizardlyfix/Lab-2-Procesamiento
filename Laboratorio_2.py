@@ -11,22 +11,25 @@ import soundfile as sf
 idioma = input("¿Quieres que la interacción sea en inglés o en español? (inglés/español): ")
 
 # Permitir al usuario cargar un archivo de audio cualquiera de formato .wav
-#ruta_audio = input("Ingresa la ruta del archivo de audio: ")
+ruta_audio = input("Ingresa la ruta del archivo de audio: ")
 
-data, fs = sf.read('signal_disturbed.wav')
+#data, fs = sf.read('signal_disturbed.wav')
 
-sd.play(data,fs)
+#sd.play(data,fs)
+
 # Procesar el archivo de audio
-#y, sr = librosa.load(ruta_audio)
+y, sr = librosa.load(ruta_audio)
 
-#Audio(data=y, rate=sr)
+Audio(data=y, rate=sr)
 
 # switch audio to mono
 
-#if len(y.shape)==2:
-#    # if audio is stereo
-#    channel1 = y[:,0]
-#    channel2 = y[:,1]
-#    y = (channel1+channel2)/2
+if len(y.shape)==2:
+    # if audio is stereo
+    channel1 = y[:,0]
+    channel2 = y[:,1]
+    y = (channel1 + channel2)/2
+
+
 
 
