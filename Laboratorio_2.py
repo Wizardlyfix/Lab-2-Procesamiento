@@ -79,6 +79,121 @@ if seleccion == 'FIR':
         btype = np.random.choice(valores)
 
     print(btype)
+    
+    senales_1_1 = ["Enventanado", "Muestreo en Frecuencia", "Parks", "Elíptico"]
+    #print(señales)
+    # Mostramos el menú
+    print("Tipos de filtros IIR disponibles:")
+    for i, x in enumerate(senales_1):
+        print(f"{i + 1}) {x}")
+
+    seleccion_2 = int(input("Ingrese su selección: "))
+
+    """    N = int(input("Ingrese el orden del filtro: "))          # Order
+    Wn = int(input("Ingrese la frecuencia de corte: "))      # Cutoff frequency in Hz
+    
+    #Este solo aplica para el cheby2 y ellipt    
+    rs = int(input("Ingrese el orden del filtro: "))        # Stopband ripple
+
+    #Este solo aplica para el cheby1 y ellipt
+    rp = int(input("Ingrese el : "))       """  # Bandpass ripple
+    
+##################################BUTTER SET#######################################################  
+    rp = int(input("Ingrese el : "))         # Bandpass ripple
+    
+    if seleccion_2==1:
+        
+        print("Eligió Butter")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        Fs = 4*Wn      
+
+
+        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
+           
+ #####################################CHEBYSHOV_1###################################################
+            
+    if seleccion_2==2:
+        
+        print("Eligió Chebyshov I")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        rp = int(input("Ingrese el Bandpass Ripple : "))         
+        Fs = 4*Wn      
+
+
+        b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada_Chb1 = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada_Chb1, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
+
+################################CHEBYSHOV II################################
+    if seleccion_2==3:
+        
+        print("Eligió Chebyshov II")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        rs = int(input("Ingrese el Stopband ripple : "))         
+        Fs = 4*Wn      
+
+
+        b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada_Chb2 = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada_Chb2, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
+            
+######################################ELIPTICO#######################################################            
+            
+
+    if seleccion_2==4:
+        
+        print("Eligió Eliptico: ")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        rs = int(input("Ingrese el Stopband ripple : "))         
+        rp = int(input("Ingrese el Bandpass Ripple : "))         
+        Fs = 4*Wn      
+
+
+        b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada_Chb2 = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada_Chb2, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
 
 elif seleccion == 'IIR':
 
