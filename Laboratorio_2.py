@@ -22,7 +22,6 @@ y, sr = librosa.load(ruta_audio)
 
 #sd.play(y, sr)
 #sd.wait()
-
 Audio(data=y, rate=sr)
 
 # switch audio to mono
