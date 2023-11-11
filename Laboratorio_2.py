@@ -20,10 +20,8 @@ ruta_audio = input("Ingresa la ruta del archivo de audio: ")
 # Procesar el archivo de audio
 y, sr = librosa.load(ruta_audio)
 
-
-sd.play(y, sr)
-sd.wait()
-
+#sd.play(y, sr)
+#sd.wait()
 
 Audio(data=y, rate=sr)
 
