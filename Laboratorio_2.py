@@ -20,6 +20,11 @@ ruta_audio = input("Ingresa la ruta del archivo de audio: ")
 # Procesar el archivo de audio
 y, sr = librosa.load(ruta_audio)
 
+
+sd.play(y, sr)
+sd.wait()
+
+
 Audio(data=y, rate=sr)
 
 # switch audio to mono
@@ -29,6 +34,14 @@ if len(y.shape)==2:
     channel1 = y[:,0]
     channel2 = y[:,1]
     y = (channel1 + channel2)/2
+
+Qtn=input("¿Desea escuchar el audio? (S/N)")
+if Qtn=='S':
+    
+    sd.play(y, sr)
+    sd.wait()
+else: 
+    print("Entendido.")
 
 # Solicitamos al usuario que seleccione el tipo de filtro FIR o IIR
 seleccion = input("Qué tipo de filtro desea aplicar, ¿FIR o IIR?: ")

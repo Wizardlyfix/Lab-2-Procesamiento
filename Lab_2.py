@@ -42,6 +42,3 @@ if Qtn=='S':
     sd.wait()
 else: 
     print("Entendido.")
-    
-    
-    
