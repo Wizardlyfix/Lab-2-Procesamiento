@@ -37,7 +37,6 @@ if len(y.shape)==2:
 
 Qtn=input("¿Desea escuchar el audio? (S/N)")
 if Qtn=='S':
-    
     sd.play(y, sr)
     sd.wait()
 else: 
@@ -96,3 +95,12 @@ elif seleccion == 'IIR':
         print(f"{i + 1}) {x}")
 
     seleccion_2 = int(input("Ingrese su selección: "))
+
+    N = int(input("Ingrese el orden del filtro: "))          # Order
+    Wn = int(input("Ingrese la frecuencia de corte: "))      # Cutoff frequency in Hz
+    
+    #Este solo aplica para el cheby2 y ellipt    
+    rs = int(input("Ingrese el orden del filtro: "))        # Stopband ripple
+
+    #Este solo aplica para el cheby1 y ellipt
+    rp = int(input("Ingrese el : "))         # Bandpass ripple
