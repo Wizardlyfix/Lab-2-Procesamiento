@@ -124,6 +124,7 @@ elif seleccion == 'IIR':
 
     #Este solo aplica para el cheby1 y ellipt
     rp = int(input("Ingrese el : "))         # Bandpass ripple
+    
     if seleccion_2==1:
         
         print("Eligio Butter")
