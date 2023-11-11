@@ -122,13 +122,10 @@ elif seleccion == 'IIR':
     rs = int(input("Ingrese el orden del filtro: "))        # Stopband ripple
 
     #Este solo aplica para el cheby1 y ellipt
-<<<<<<< HEAD
     rp = int(input("Ingrese el : "))         # Bandpass ripple
-=======
     rp = int(input("Ingrese el : "))       """  # Bandpass ripple
     
 ##################################BUTTER SET#######################################################  
->>>>>>> 3964542ef92ec817dff885c09f170301b507ba4b
     
     if seleccion_2==1:
         
