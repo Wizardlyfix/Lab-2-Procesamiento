@@ -115,15 +115,61 @@ elif seleccion == 'IIR':
 
     seleccion_2 = int(input("Ingrese su selección: "))
 
-    N = int(input("Ingrese el orden del filtro: "))          # Order
+    """    N = int(input("Ingrese el orden del filtro: "))          # Order
     Wn = int(input("Ingrese la frecuencia de corte: "))      # Cutoff frequency in Hz
     
     #Este solo aplica para el cheby2 y ellipt    
     rs = int(input("Ingrese el orden del filtro: "))        # Stopband ripple
 
     #Este solo aplica para el cheby1 y ellipt
+<<<<<<< HEAD
     rp = int(input("Ingrese el : "))         # Bandpass ripple
+=======
+    rp = int(input("Ingrese el : "))       """  # Bandpass ripple
+    
+##################################BUTTER SET#######################################################  
+>>>>>>> 3964542ef92ec817dff885c09f170301b507ba4b
     
     if seleccion_2==1:
         
-        print("Eligio Butter")
+        print("Eligió Butter")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        Fs = 4*Wn      
+
+
+        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
+           
+ #####################################CHEBYSHOV_1###################################################
+            
+    if seleccion_2==2:
+        
+        print("Eligió Butter")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        Fs = 4*Wn      
+
+
+        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada, sr)
+            sd.wait()
+        else:
+            print("Entendido.___")
