@@ -33,11 +33,23 @@ if len(y.shape)==2:
 # Solicitamos al usuario que seleccione el tipo de filtro FIR o IIR
 seleccion = input("Qué tipo de filtro desea aplicar, ¿FIR o IIR?: ")
 
-if seleccion == "FIR":
+if seleccion == 'FIR':
 
-    print("Qué tipo de filtro desea: ")    
-    
-    btype_filtros = ["Pasa-bajas", "Pasa-altas", "Pasa-banda", "Rechaza-banda"]
+################################################################
+
+    # Lista de filtros FIR disponibles
+    senales = ["Enventanado", "Muestreo en frecuencia", "Parks-McClellan"]
+
+    #print(señales)
+    # Mostramos el menú
+    print("Tipos de filtros FIR disponibles:")
+    for i, x in enumerate(senales):
+        print(f"{i + 1}) {x}")
+
+    seleccion_1 = int(input("Ingrese su selección: "))
+
+################################################################
+    btype_filtros = ["Pasa-bajas", "Pasa-altas", "Pasa-banda", "Rechaza-banda", "Arbitrario"]
 
     print("Filtros disponibles:")
     for i, x in enumerate(btype_filtros):
@@ -53,28 +65,13 @@ if seleccion == "FIR":
         btype = 'bandpass'
     elif btype_S == 4:
         btype = 'bandstop'
+    elif btype_S == 5:
+        valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
+        btype = np.random.choice(valores)
 
-################################################################
+    print(btype)
 
-    # Lista de filtros FIR disponibles
-    senales = ["Enventanado", "Muestreo en frecuencia", "Parks-McClellan"]
-
-    #print(señales)
-    # Mostramos el menú
-    print("Tipos de filtros FIR disponibles:")
-    for i, x in enumerate(senales):
-        print(f"{i + 1}) {x}")
-
-    seleccion_1 = int(input("Ingrese su selección: "))
-
-    if seleccion_1 == 1:
-
-    elif seleccion_1 == 2:
-
-    elif seleccion_1 == 3:
-
-        
-elif seleccion == "IIR":
+elif seleccion == 'IIR':
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
@@ -86,9 +83,3 @@ elif seleccion == "IIR":
         print(f"{i + 1}) {x}")
 
     seleccion_2 = int(input("Ingrese su selección: "))
-
-    if seleccion_2 == 1:
-
-    elif seleccion_2 == 2:
-    
-    elif seleccion_2 == 3:
