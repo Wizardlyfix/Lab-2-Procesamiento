@@ -185,7 +185,7 @@ elif seleccion == 'IIR':
 
         b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
 
-        y_filtrada = signal.lfilter(b, a, y)
+        y_filtrada_Chb2 = signal.lfilter(b, a, y)
 
         Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
         if Qtn == 'S':
