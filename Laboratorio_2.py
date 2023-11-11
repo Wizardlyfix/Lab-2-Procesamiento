@@ -337,6 +337,8 @@ elif seleccion == 'IIR':
         else:
             print("Entendido.")
 
+
+
 f = w*Fs/(2*np.pi)
 
 fig, ax1 = plt.subplots()
