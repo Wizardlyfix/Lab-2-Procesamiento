@@ -107,7 +107,6 @@ elif seleccion == 'IIR':
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
-
     #print(señales)
     # Mostramos el menú
     print("Tipos de filtros IIR disponibles:")
@@ -126,6 +125,7 @@ elif seleccion == 'IIR':
     rp = int(input("Ingrese el : "))       """  # Bandpass ripple
     
 ##################################BUTTER SET#######################################################  
+    rp = int(input("Ingrese el : "))         # Bandpass ripple
     
     if seleccion_2==1:
         
@@ -152,21 +152,71 @@ elif seleccion == 'IIR':
             
     if seleccion_2==2:
         
-        print("Eligió Butter")
+        print("Eligió Chebyshov I")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
+        rp = int(input("Ingrese el Bandpass Ripple : "))         
         Fs = 4*Wn      
 
 
-        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+        b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
 
-        y_filtrada = signal.lfilter(b, a, y)
+        y_filtrada_Chb1 = signal.lfilter(b, a, y)
 
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
         if Qtn == 'S':
             sd.play(y, sr)
             sd.wait()
-            sd.play(y_filtrada, sr)
+            sd.play(y_filtrada_Chb1, sr)
             sd.wait()
         else:
-            print("Entendido.___")
+            print("Entendido.")
+
+################################CHEBYSHOV II################################
+    if seleccion_2==3:
+        
+        print("Eligió Chebyshov II")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        rs = int(input("Ingrese el Stopband ripple : "))         
+        Fs = 4*Wn      
+
+
+        b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada_Chb2 = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada_Chb2, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
+            
+######################################ELIPTICO#######################################################            
+            
+
+    if seleccion_2==4:
+        
+        print("Eligió Eliptico: ")
+        N = int(input("Ingrese el orden del filtro: "))          
+        Wn = int(input("Ingrese la frecuencia de corte: "))  
+        rs = int(input("Ingrese el Stopband ripple : "))         
+        rp = int(input("Ingrese el Bandpass Ripple : "))         
+        Fs = 4*Wn      
+
+
+        b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
+
+        y_filtrada_Chb2 = signal.lfilter(b, a, y)
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada_Chb2, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
