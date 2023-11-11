@@ -242,7 +242,8 @@ elif seleccion == 'IIR':
         Fs = 4*Wn      
 
 
-        b, a, sos = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='sos')
+        sos = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='sos')
+        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='ba')
         w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
         y_filtrada = signal.sosfilt(sos, y)
 
@@ -255,6 +256,9 @@ elif seleccion == 'IIR':
         else:
             print("Entendido.")
 
+        print(y)
+        print(y_filtrada)
+        
         f = w*Fs/(2*np.pi)
 
         fig, ax1 = plt.subplots()
