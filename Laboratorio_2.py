@@ -136,7 +136,7 @@ elif seleccion == 'IIR':
 
 
         b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
-
+        w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
         y_filtrada = signal.lfilter(b, a, y)
 
         Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
@@ -147,8 +147,8 @@ elif seleccion == 'IIR':
             sd.wait()
         else:
             print("Entendido.")
-           
- #####################################CHEBYSHOV_1###################################################
+
+#####################################CHEBYSHOV_1###################################################
             
     if seleccion_2==2:
         
@@ -159,7 +159,7 @@ elif seleccion == 'IIR':
 
 
         b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
-
+        w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
         y_filtrada = signal.lfilter(b, a, y)
 
         Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
@@ -170,3 +170,52 @@ elif seleccion == 'IIR':
             sd.wait()
         else:
             print("Entendido.___")
+
+
+
+
+f = w*Fs/(2*np.pi)
+
+fig, ax1 = plt.subplots()
+ax1.set_title('Digital filter frequency response')
+ax1.plot(f,np.abs(H),'b') # Blue color line
+ax1.set_ylabel('Magnitude', color='b')
+ax1.set_xlabel('Frequency [Hz]')
+
+ax2 = ax1.twinx()
+
+angles = np.unwrap(np.angle(H))
+ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
+ax2.set_ylabel('Phase [°]', color='g')
+ax2.grid()
+ax2.set_xlim((0, 20))
+ax2.axis('tight')
+
+plt.xlim((0,20))
+plt.show()
+
+#Periodo para gráficar los audios
+T = 1/sr
+
+tam = np.size(y)
+t = np.arange(0, tam*T,T)
+
+tam1 = np.size(y_filtrada)
+t1 = np.arange(0, tam1*T,T)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+
+ax1.plot(t, y, 'b')
+ax1.set_xlabel('Tiempo (s)')
+ax1.set_ylabel('Amplitud')
+ax1.set_title('Audio sin filtrar')
+ax1.grid(True)
+
+ax2.plot(t1, y_filtrada, 'r')
+ax2.set_xlabel('Tiempo (s)')
+ax2.set_ylabel('Amplitud')
+ax2.set_title('Audio filtrado')
+ax2.grid(True)
+
+plt.subplots_adjust(wspace=0.5)
+plt.show()
