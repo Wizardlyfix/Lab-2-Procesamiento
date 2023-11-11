@@ -311,8 +311,7 @@ elif seleccion == 'IIR':
             print("Entendido.")
             
 ######################################ELIPTICO#######################################################            
-            
-
+        
     if seleccion_2==4:
         
         print("Eligió Eliptico: ")
