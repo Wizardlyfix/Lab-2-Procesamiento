@@ -6,13 +6,13 @@ from IPython.display import Audio
 #import mir_eval.sonify
 import sounddevice as sd
 import soundfile as sf
-
+"""
 # Preguntar al usuario si quiere que la interacción sea en inglés o en español
 idioma = input("¿Quieres que la interacción sea en inglés o en español? (inglés/español): ")
 
 # Permitir al usuario cargar un archivo de audio cualquiera de formato .wav
 ruta_audio = input("Ingresa la ruta del archivo de audio: ")
-
+"""
 #data, fs = sf.read('signal_disturbed.wav')
 
 #sd.play(data,fs)

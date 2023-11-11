@@ -83,3 +83,6 @@ elif seleccion == 'IIR':
         print(f"{i + 1}) {x}")
 
     seleccion_2 = int(input("Ingrese su selección: "))
+    if seleccion_2==1:
+        
+        print("Eligio Butter")
