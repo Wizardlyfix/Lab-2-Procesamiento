@@ -85,6 +85,29 @@ if seleccion == 'FIR':
 
 elif seleccion == 'IIR':
 
+    ################################################################
+    btype_filtros = ["Pasa-bajas", "Pasa-altas", "Pasa-banda", "Rechaza-banda", "Arbitrario"]
+
+    print("Filtros disponibles:")
+    for i, x in enumerate(btype_filtros):
+        print(f"{i + 1}) {x}")
+
+    btype_S = int(input("Ingrese el tipo de filtro que desea: "))
+
+    if btype_S == 1:
+        btype = 'lowpass'
+    elif btype_S == 2:
+        btype = 'highpass'
+    elif btype_S == 3:
+        btype = 'bandpass'
+    elif btype_S == 4:
+        btype = 'bandstop'
+    elif btype_S == 5:
+        valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
+        btype = np.random.choice(valores)
+
+    print(btype)
+
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
 
