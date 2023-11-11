@@ -107,7 +107,6 @@ elif seleccion == 'IIR':
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
-
     #print(señales)
     # Mostramos el menú
     print("Tipos de filtros IIR disponibles:")
