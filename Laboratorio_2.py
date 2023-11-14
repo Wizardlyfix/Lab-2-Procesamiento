@@ -75,6 +75,7 @@ if seleccion == 'FIR':
     elif btype_S == 4:
         btype = 'bandstop'
     elif btype_S == 5:
+        #Meterle A(k) con sus correspondientes freccuencias y no esto de los "valores"
         valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
         btype = np.random.choice(valores)
 
@@ -198,7 +199,7 @@ if seleccion == 'FIR':
 elif seleccion == 'IIR':
 
     ################################################################
-    btype_filtros = ["Pasa-bajas", "Pasa-altas", "Pasa-banda", "Rechaza-banda", "Arbitrario"]
+    btype_filtros = ["Pasa-bajas", "Pasa-altas", "Pasa-banda", "Rechaza-banda"]
 
     print("Filtros disponibles:")
     for i, x in enumerate(btype_filtros):
@@ -207,16 +208,13 @@ elif seleccion == 'IIR':
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
 
     if btype_S == 1:
-        btype = 'lowpass'
+        btype = 'lowpass'  #N = 10
     elif btype_S == 2:
-        btype = 'highpass'
+        btype = 'highpass'  #N = 10
     elif btype_S == 3:
-        btype = 'bandpass'
+        btype = 'bandpass' #N = 5 o 6
     elif btype_S == 4:
-        btype = 'bandstop'
-    elif btype_S == 5:
-        valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
-        btype = np.random.choice(valores)
+        btype = 'bandstop' #N = 5 o 6
 
     print(btype)
 
@@ -237,77 +235,22 @@ elif seleccion == 'IIR':
     if seleccion_2==1:
         
         print("Eligió Butter")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        Fs = 4*Wn      
+        #Nosotros definimos N
+        N = 10
+        #N = int(input("Ingrese el orden del filtro: "))          
+        #Wn = int(input("Ingrese la frecuencia de corte: ")) 
+        #De momento 
+        #Ingrese la frecuencia de corte 1 y la f de corte 2 hay que preguntarlas al usuario
+        #Si es pasa altas o pasabajas solo se pide un Wn sino se piden dos Wn
+        Wn = [4e3, 7e3] 
+        Fs = sr
 
-
-        sos = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='sos')
+        #sos = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='sos')
         b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='ba')
-        w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-        y_filtrada = signal.sosfilt(sos, y)
-
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
-
-        print(y)
-        print(y_filtrada)
-        
-        f = w*Fs/(2*np.pi)
-
-        fig, ax1 = plt.subplots()
-        ax1.set_title('Digital filter frequency response')
-        ax1.plot(f,np.abs(H),'b') # Blue color line
-        ax1.set_ylabel('Magnitude', color='b')
-        ax1.set_xlabel('Frequency [Hz]')
-
-        ax2 = ax1.twinx()
-
-        angles = np.unwrap(np.angle(H))
-        ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
-        ax2.set_ylabel('Phase [°]', color='g')
-        ax2.grid()
-        ax2.set_xlim((0, 20))
-        ax2.axis('tight')
-
-        plt.xlim((0,20))
-        plt.show()
-
-        #Periodo para gráficar los audios
-        T = 1/sr
-
-        tam = np.size(y)
-        t = np.arange(0, tam*T,T)
-
-        tam1 = np.size(y_filtrada)
-        t1 = np.arange(0, tam1*T,T)
-
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
-
-        ax1.plot(t, y, 'b')
-        ax1.set_xlabel('Tiempo (s)')
-        ax1.set_ylabel('Amplitud')
-        ax1.set_title('Audio sin filtrar')
-        ax1.grid(True)
-
-        ax2.plot(t1, y_filtrada, 'r')
-        ax2.set_xlabel('Tiempo (s)')
-        ax2.set_ylabel('Amplitud')
-        ax2.set_title('Audio filtrado')
-        ax2.grid(True)
-
-        plt.subplots_adjust(wspace=0.5)
-        plt.show()
 
 #####################################CHEBYSHOV_1###################################################
             
-    if seleccion_2==2:
+    elif seleccion_2==2:
         
         print("Eligió Chebyshov I")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -330,7 +273,7 @@ elif seleccion == 'IIR':
             print("Entendido.")
 
 ################################CHEBYSHOV II################################
-    if seleccion_2==3:
+    elif seleccion_2==3:
         
         print("Eligió Chebyshov II")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -355,7 +298,7 @@ elif seleccion == 'IIR':
             
 ######################################ELIPTICO#######################################################            
         
-    if seleccion_2==4:
+    elif seleccion_2==4:
         
         print("Eligió Eliptico: ")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -378,3 +321,65 @@ elif seleccion == 'IIR':
         else:
             print("Entendido.")
 
+
+
+w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+y_filtrada = signal.lfilter(b, a, y)
+
+Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+if Qtn == 'S':
+    sd.play(y, sr)
+    sd.wait()
+    sd.play(y_filtrada, sr)
+    sd.wait()
+else:
+    print("Entendido.")
+
+print(y)
+print(y_filtrada)
+
+f = w*Fs/(2*np.pi)
+
+fig, ax1 = plt.subplots()
+ax1.set_title('Digital filter frequency response')
+ax1.plot(f,np.abs(H),'b') # Blue color line
+ax1.set_ylabel('Magnitude', color='b')
+ax1.set_xlabel('Frequency [Hz]')
+
+ax2 = ax1.twinx()
+
+angles = np.unwrap(np.angle(H))
+ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
+ax2.set_ylabel('Phase [°]', color='g')
+ax2.grid()
+ax2.set_xlim((0, 20))
+ax2.axis('tight')
+
+plt.xlim((0,20))
+plt.show()
+
+#Periodo para gráficar los audios
+T = 1/sr
+
+tam = np.size(y)
+t = np.arange(0, tam*T,T)
+
+tam1 = np.size(y_filtrada)
+t1 = np.arange(0, tam1*T,T)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+
+ax1.plot(t, y, 'b')
+ax1.set_xlabel('Tiempo (s)')
+ax1.set_ylabel('Amplitud')
+ax1.set_title('Audio sin filtrar')
+ax1.grid(True)
+
+ax2.plot(t1, y_filtrada, 'r')
+ax2.set_xlabel('Tiempo (s)')
+ax2.set_ylabel('Amplitud')
+ax2.set_title('Audio filtrado')
+ax2.grid(True)
+
+plt.subplots_adjust(wspace=0.5)
+plt.show()
