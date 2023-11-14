@@ -102,30 +102,19 @@ if seleccion == 'FIR':
 ##################################BUTTER SET#######################################################  
     rp = int(input("Ingrese el : "))         # Bandpass ripple
     
-    if seleccion_2==1:
-        
+    if seleccion_2 == 1:
+
         print("Eligió Butter")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
         Fs = 4*Wn      
 
-
         b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
 
-        y_filtrada = signal.lfilter(b, a, y)
-
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
 
 #####################################CHEBYSHOV_1###################################################
             
-    if seleccion_2==2:
+    elif seleccion_2 == 2:
         
         print("Eligió Chebyshov I")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -133,22 +122,10 @@ if seleccion == 'FIR':
         rp = int(input("Ingrese el Bandpass Ripple : "))         
         Fs = 4*Wn      
 
-
         b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
 
-        y_filtrada_Chb1 = signal.lfilter(b, a, y)
-
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada_Chb1, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
-
 ################################CHEBYSHOV II################################
-    if seleccion_2==3:
+    elif seleccion_2 == 3:
         
         print("Eligió Chebyshov II")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -156,24 +133,11 @@ if seleccion == 'FIR':
         rs = int(input("Ingrese el Stopband ripple : "))         
         Fs = 4*Wn      
 
-
         b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
 
-        y_filtrada_Chb2 = signal.lfilter(b, a, y)
-
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada_Chb2, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
-            
 ######################################ELIPTICO#######################################################            
-            
 
-    if seleccion_2==4:
+    elif seleccion_2 == 4:
         
         print("Eligió Eliptico: ")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -182,19 +146,8 @@ if seleccion == 'FIR':
         rp = int(input("Ingrese el Bandpass Ripple : "))         
         Fs = 4*Wn      
 
-
         b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
 
-        y_filtrada_Chb2 = signal.lfilter(b, a, y)
-
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada_Chb2, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
 
 elif seleccion == 'IIR':
 
@@ -224,7 +177,6 @@ elif seleccion == 'IIR':
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
-    #print(señales)
     # Mostramos el menú
     print("Tipos de filtros IIR disponibles:")
     for i, x in enumerate(senales_1):
@@ -235,8 +187,7 @@ elif seleccion == 'IIR':
 
 ##################################BUTTER SET#######################################################  
 
-    
-    if seleccion_2==1:
+    if seleccion_2 == 1:
         
         print("Eligió Butter")
         #Nosotros definimos N
@@ -253,7 +204,7 @@ elif seleccion == 'IIR':
 
 #####################################CHEBYSHOV_1###################################################
             
-    elif seleccion_2==2:
+    elif seleccion_2 == 2:
         
         print("Eligió Chebyshov I")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -265,7 +216,7 @@ elif seleccion == 'IIR':
 
 
 ################################CHEBYSHOV II################################
-    elif seleccion_2==3:
+    elif seleccion_2 == 3:
         
         print("Eligió Chebyshov II")
         N = int(input("Ingrese el orden del filtro: "))          
@@ -277,7 +228,7 @@ elif seleccion == 'IIR':
 
 ######################################ELIPTICO#######################################################            
         
-    elif seleccion_2==4:
+    elif seleccion_2 == 4:
         
         print("Eligió Eliptico: ")
         N = int(input("Ingrese el orden del filtro: "))          
