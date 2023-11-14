@@ -259,20 +259,12 @@ print(y_filtrada)
 
 f = w*Fs/(2*np.pi)
 
-fig, ax1 = plt.subplots()
-ax1.set_title('Digital filter frequency response')
-ax1.plot(f,np.abs(H),'b') # Blue color line
-ax1.set_ylabel('Magnitude', color='b')
-ax1.set_xlabel('Frequency [Hz]')
+plt.title('Digital filter frequency response')
+plt.plot(f,np.abs(H),'b') # Blue color line
+plt.ylabel('Magnitude', color='b')
+plt.xlabel('Frequency [Hz]')
 
-ax2 = ax1.twinx()
 
-angles = np.unwrap(np.angle(H))
-ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
-ax2.set_ylabel('Phase [°]', color='g')
-ax2.grid()
-ax2.set_xlim((0, 20))
-ax2.axis('tight')
 
 plt.xlim((0,20))
 plt.show()
