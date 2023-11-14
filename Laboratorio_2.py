@@ -85,7 +85,7 @@ if seleccion == 'FIR':
     #print(señales)
     # Mostramos el menú
     print("Tipos de filtros IIR disponibles:")
-    for i, x in enumerate(senales_1):
+    for i, x in enumerate(senales_1_1):
         print(f"{i + 1}) {x}")
 
     seleccion_2 = int(input("Ingrese su selección: "))
@@ -122,8 +122,8 @@ if seleccion == 'FIR':
             sd.wait()
         else:
             print("Entendido.")
-           
- #####################################CHEBYSHOV_1###################################################
+
+#####################################CHEBYSHOV_1###################################################
             
     if seleccion_2==2:
         
@@ -209,12 +209,16 @@ elif seleccion == 'IIR':
 
     if btype_S == 1:
         btype = 'lowpass'  #N = 10
+        N = 10
     elif btype_S == 2:
         btype = 'highpass'  #N = 10
+        N = 10
     elif btype_S == 3:
         btype = 'bandpass' #N = 5 o 6
+        N = 5
     elif btype_S == 4:
         btype = 'bandstop' #N = 5 o 6
+        N = 5
 
     print(btype)
 
@@ -236,7 +240,6 @@ elif seleccion == 'IIR':
         
         print("Eligió Butter")
         #Nosotros definimos N
-        N = 10
         #N = int(input("Ingrese el orden del filtro: "))          
         #Wn = int(input("Ingrese la frecuencia de corte: ")) 
         #De momento 
@@ -258,19 +261,8 @@ elif seleccion == 'IIR':
         rp = int(input("Ingrese el Bandpass Ripple : "))         
         Fs = 4*Wn      
 
-
         b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
-        w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-        y_filtrada_Chb1 = signal.lfilter(b, a, y)
 
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada_Chb1, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
 
 ################################CHEBYSHOV II################################
     elif seleccion_2==3:
@@ -281,21 +273,8 @@ elif seleccion == 'IIR':
         rs = int(input("Ingrese el Stopband ripple : "))         
         Fs = 4*Wn      
 
-
         b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
-        w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-        y_filtrada_Chb2 = signal.lfilter(b, a, y)
 
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada_Chb2, sr)
-            sd.wait()
-        else:
-            print("Entendido.___")
-            print("Entendido.")
-            
 ######################################ELIPTICO#######################################################            
         
     elif seleccion_2==4:
@@ -307,21 +286,10 @@ elif seleccion == 'IIR':
         rp = int(input("Ingrese el Bandpass Ripple : "))         
         Fs = 4*Wn      
 
-
         b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
-        w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-        y_filtrada_ellip = signal.lfilter(b, a, y)
-
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N)")
-        if Qtn == 'S':
-            sd.play(y, sr)
-            sd.wait()
-            sd.play(y_filtrada_ellip, sr)
-            sd.wait()
-        else:
-            print("Entendido.")
 
 
+####################################GRÁFICOS#######################################################
 
 w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 y_filtrada = signal.lfilter(b, a, y)
