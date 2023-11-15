@@ -308,6 +308,11 @@ plt.ylabel('Fase [°]')
 plt.title("Respuesta en frecuencia de Fase")
 plt.show()
 
+#####################################MAPA DE CALOR##########################################
+
+
+
+###########################################################################################
 
 #Periodo para gráficar los audios
 T = 1/sr
