@@ -196,11 +196,25 @@ elif seleccion == 'IIR':
         #De momento 
         #Ingrese la frecuencia de corte 1 y la f de corte 2 hay que preguntarlas al usuario
         #Si es pasa altas o pasabajas solo se pide un Wn sino se piden dos Wn
-        Wn = [4e3, 7e3] 
+        W_n = []  # Default initialization
+
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        # Other parameters
         Fs = sr
 
-        #sos = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='sos')
-        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='ba')
+        # Design the Butterworth filter
+        #b, a = signal.butter(N, W_n, btype=btype, analog=False, fs=Fs, output='ba')
 
 #####################################CHEBYSHOV_1###################################################
             
@@ -242,7 +256,7 @@ elif seleccion == 'IIR':
 
 ####################################GRÁFICOS#######################################################
 
-w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+"""w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 y_filtrada = signal.lfilter(b, a, y)
 
 Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
@@ -301,4 +315,4 @@ ax2.set_title('Audio filtrado')
 ax2.grid(True)
 
 plt.subplots_adjust(wspace=0.5)
-plt.show()
+plt.show()"""
