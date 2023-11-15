@@ -90,7 +90,7 @@ if seleccion == 'FIR':
         print("Eligió Enventanado")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
-        Fs = 4*Wn      
+        Fs = 4*Wn
 
         h= signal.firwin(N, Wn, btype=btype, window='hann', fs=Fs)
 
