@@ -16,8 +16,9 @@ if len(y.shape)==2:
     y = (channel1 + channel2)/2
 
 
-b,a = signal.ellip(5, 3, 30, [1e3, 3e3], btype='bandpass', analog=False, output='ba', fs=Fs)
+b,a = signal.cheby2(5, 30, [1e3, 3e3], btype='bandpass', analog=False, output='ba', fs=Fs)
 #w = np.linspace(0, np.pi, int(10e3))
 w, H = signal.freqz(b,a)
 plt.plot(w*Fs/(2*np.pi),np.abs(H))
 plt.show()
+

@@ -32,7 +32,7 @@ if len(y.shape)==2:
     channel2 = y[:,1]
     y = (channel1 + channel2)/2
 
-Qtn=input("¿Desea escuchar el audio? (S/N)")
+Qtn=input("¿Desea escuchar el audio? (S/N): ")
 if Qtn=='S':
     sd.play(y, sr)
     sd.wait()
@@ -75,7 +75,7 @@ if seleccion == 'FIR':
     elif btype_S == 4:
         btype = 'bandstop'
     elif btype_S == 5:
-        #Meterle A(k) con sus correspondientes freccuencias y no esto de los "valores"
+        #Meterle A(k) con sus correspondientes frecuencias y no esto de los "valores"
         valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
         btype = np.random.choice(valores)
 
@@ -173,6 +173,10 @@ elif seleccion == 'IIR':
         btype = 'bandstop' #N = 5 o 6
         N = 5
 
+    rs = 3        
+    rp = 30
+    Fs = sr
+
     #print(btype)
 
     # Lista de filtros IIR disponibles
@@ -197,48 +201,36 @@ elif seleccion == 'IIR':
         #Ingrese la frecuencia de corte 1 y la f de corte 2 hay que preguntarlas al usuario
         #Si es pasa altas o pasabajas solo se pide un Wn sino se piden dos Wn
         Wn = [1e3, 3e3]
-        Fs = sr
-
-        b,a = signal.butter(N, Wn, btype, analog=False, output='ba', fs=Fs)
-        
-        #b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='ba')
+        b, a = signal.butter(N, Wn, btype, analog=False, output='ba', fs=Fs)
 
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_2 == 2:
         
         print("Eligió Chebyshov I")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
+        Wn = [1e3, 3e3]
 
+        b, a = signal.cheby1(N, rp, Wn, btype, analog=False, output='ba', fs=Fs)
 
 ################################CHEBYSHOV II################################
     elif seleccion_2 == 3:
         
         print("Eligió Chebyshov II")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rs = int(input("Ingrese el Stopband ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.cheby2(N, Wn, btype=btype, analog=False, fs=Fs)
+        Wn = [1e3, 3e3]         
+
+        b,a = signal.cheby2(N, rs, Wn, btype, analog=False, output='ba', fs=Fs)
 
 ######################################ELIPTICO#######################################################            
         
     elif seleccion_2 == 4:
         
         print("Eligió Eliptico: ")
+
         Wn = [1e3, 3e3] 
-        rs = 3        
-        rp = 30 
-        Fs = rs
 
-        b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
-
+        b, a = signal.ellip(N, rs, rp, Wn, btype, analog=False, output='ba', fs=Fs)
 
 ####################################GRÁFICOS#######################################################
 
