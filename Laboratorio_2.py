@@ -95,9 +95,11 @@ if seleccion == 'FIR':
         f2 = 1500
         f3 = 2000
         f4 = 2500
-        h= signal.firwin(N, [f1, f2, f3, f4], window='hann',fs=sr) 
+        h= signal.firwin(N, [f1, f2, f3], window='hann',fs=sr) 
+        print(h)
+        w, H = signal.freqz(h) #Sacar la respuesta en frecuencia
 
-
+        y_filtrada = signal.lfilter(h, y)
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_1 == 2:
