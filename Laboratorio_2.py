@@ -200,8 +200,27 @@ elif seleccion == 'IIR':
         #De momento 
         #Ingrese la frecuencia de corte 1 y la f de corte 2 hay que preguntarlas al usuario
         #Si es pasa altas o pasabajas solo se pide un Wn sino se piden dos Wn
-        Wn = [1e3, 3e3]
-        b, a = signal.butter(N, Wn, btype, analog=False, output='ba', fs=Fs)
+        W_n = []  # Default initialization
+
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        # Other parameters
+        #Fs = sr
+
+        # Design the Butterworth filter
+        #b, a = signal.butter(N, W_n, btype=btype, analog=False, fs=Fs, output='ba')
+        #Wn = [1e3, 3e3]
+        b, a = signal.butter(N, W_n, btype, analog=False, output='ba', fs=Fs)
 
 #####################################CHEBYSHOV_1###################################################
             
@@ -209,18 +228,45 @@ elif seleccion == 'IIR':
         
         print("Eligió Chebyshov I")
 
-        Wn = [1e3, 3e3]
+        W_n = []  # Default initialization
 
-        b, a = signal.cheby1(N, rp, Wn, btype, analog=False, output='ba', fs=Fs)
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        #Wn = [1e3, 3e3]
+
+        b, a = signal.cheby1(N, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ################################CHEBYSHOV II################################
     elif seleccion_2 == 3:
         
         print("Eligió Chebyshov II")
 
-        Wn = [1e3, 3e3]         
+        #Wn = [1e3, 3e3]         
+        W_n = []  # Default initialization
 
-        b,a = signal.cheby2(N, rs, Wn, btype, analog=False, output='ba', fs=Fs)
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        b,a = signal.cheby2(N, rs, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ######################################ELIPTICO#######################################################            
         
@@ -228,12 +274,26 @@ elif seleccion == 'IIR':
         
         print("Eligió Eliptico: ")
 
-        Wn = [1e3, 3e3] 
+        #Wn = [1e3, 3e3] 
+        W_n = []  # Default initialization
 
-        b, a = signal.ellip(N, rs, rp, Wn, btype, analog=False, output='ba', fs=Fs)
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ####################################GRÁFICOS#######################################################
 
+w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 w, H = signal.freqz(b,a) #Sacar la respuesta en frecuencia
 y_filtrada = signal.lfilter(b, a, y)
 
