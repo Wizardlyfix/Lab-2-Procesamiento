@@ -263,9 +263,6 @@ if Qtn == 'S':
 else:
     print("Entendido.")
 
-print(y)
-print(y_filtrada)
-
 f = w*Fs/(2*np.pi)
 
 plt.plot(f, 20*np.log10(np.abs(H)))
