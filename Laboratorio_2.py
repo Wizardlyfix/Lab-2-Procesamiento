@@ -97,9 +97,32 @@ if seleccion == 'FIR':
         f4 = 2500
         h= signal.firwin(N, [f1, f2, f3], window='hann',fs=sr) 
         print(h)
-        w, H = signal.freqz(h) #Sacar la respuesta en frecuencia
+        w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
 
-        y_filtrada = signal.lfilter(h, y)
+        y_filtrada = signal.lfilter(h, 1,y)
+        print(y_filtrada)
+        
+        f = w*sr/(2*np.pi)
+
+        fig, ax1 = plt.subplots()
+        ax1.set_title('FIR filter frequency response')
+        ax1.plot(f,np.abs(H),'b') # Blue color line
+        ax1.set_ylabel('Magnitude', color='b')
+        ax1.set_xlabel('Frequency [Hz]')
+
+        ax2 = ax1.twinx()
+
+
+        angles = np.unwrap(np.angle(H))
+        ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
+        ax2.set_ylabel('Phase [°]', color='g')
+        ax2.grid()
+        ax2.axis('tight')
+
+        plt.xlim((0,3000))
+        plt.show()
+        
+        
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_1 == 2:
