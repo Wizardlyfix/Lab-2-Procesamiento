@@ -68,55 +68,38 @@ if seleccion == 'FIR':
 
     if btype_S == 1:
         btype = 'lowpass'
+        N =10   
     elif btype_S == 2:
         btype = 'highpass'
+        N =10   
     elif btype_S == 3:
         btype = 'bandpass'
+        N =5  
     elif btype_S == 4:
         btype = 'bandstop'
-    elif btype_S == 5:
-        #Meterle A(k) con sus correspondientes frecuencias y no esto de los "valores"
-        valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
-        btype = np.random.choice(valores)
+        N =5   
 
     print(btype)
     
-    senales_1_1 = ["Enventanado", "Muestreo en Frecuencia", "Parks", "Elíptico"]
+    #senales_1_1 = ["Enventanado", "Muestreo en Frecuencia", "Parks"]
     #print(señales)
-    # Mostramos el menú
-    print("Tipos de filtros IIR disponibles:")
-    for i, x in enumerate(senales_1_1):
-        print(f"{i + 1}) {x}")
-
-    seleccion_2 = int(input("Ingrese su selección: "))
-
-    """    N = int(input("Ingrese el orden del filtro: "))          # Order
-    Wn = int(input("Ingrese la frecuencia de corte: "))      # Cutoff frequency in Hz
+    # Mostramos el menú    # Bandpass ripple
     
-    #Este solo aplica para el cheby2 y ellipt    
-    rs = int(input("Ingrese el orden del filtro: "))        # Stopband ripple
+    if seleccion_1 == 1:
 
-    #Este solo aplica para el cheby1 y ellipt
-    rp = int(input("Ingrese el : "))       """  # Bandpass ripple
-    
-##################################BUTTER SET#######################################################  
-    rp = int(input("Ingrese el : "))         # Bandpass ripple
-    
-    if seleccion_2 == 1:
-
-        print("Eligió Butter")
+        print("Eligió Enventanado")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
         Fs = 4*Wn      
 
-        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+        h= signal.firwin(N, Wn, btype=btype, window='hann', fs=Fs)
 
 
 #####################################CHEBYSHOV_1###################################################
             
-    elif seleccion_2 == 2:
+    elif seleccion_1 == 2:
         
-        print("Eligió Chebyshov I")
+        print("Eligió Muestreo en frecuencia")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
         rp = int(input("Ingrese el Bandpass Ripple : "))         
@@ -125,9 +108,9 @@ if seleccion == 'FIR':
         b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
 
 ################################CHEBYSHOV II################################
-    elif seleccion_2 == 3:
+    elif seleccion_1 == 3:
         
-        print("Eligió Chebyshov II")
+        print("Eligió Parks-McClellan")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
         rs = int(input("Ingrese el Stopband ripple : "))         
@@ -135,20 +118,8 @@ if seleccion == 'FIR':
 
         b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
 
-######################################ELIPTICO#######################################################            
-
-    elif seleccion_2 == 4:
-        
-        print("Eligió Eliptico: ")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rs = int(input("Ingrese el Stopband ripple : "))         
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
-
-        b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
-
-
+################################################################################################################
+##################################IIR FILTERS####################################################################
 elif seleccion == 'IIR':
 
     ################################################################
@@ -318,6 +289,16 @@ plt.show()
 
 ###########################################################################################
 
+f1, t1, Sxx = signal.spectrogram(b,a,scaling='density')
+plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud',)
+plt.ylabel('Frequency [Hz]')
+plt.xlabel('Time [sec]')
+plt.show()
+
+
+
+
+############################################################################################
 #Periodo para gráficar los audios
 T = 1/sr
 
