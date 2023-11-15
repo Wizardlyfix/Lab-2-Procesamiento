@@ -81,10 +81,6 @@ if seleccion == 'FIR':
 
     print(btype)
     
-    #senales_1_1 = ["Enventanado", "Muestreo en Frecuencia", "Parks"]
-    #print(señales)
-    # Mostramos el menú    # Bandpass ripple
-    
     if seleccion_1 == 1:
 
         print("Eligió Enventanado")
