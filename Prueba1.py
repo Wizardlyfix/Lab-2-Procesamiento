@@ -21,4 +21,3 @@ b,a = signal.cheby2(5, 30, [1e3, 3e3], btype='bandpass', analog=False, output='b
 w, H = signal.freqz(b,a)
 plt.plot(w*Fs/(2*np.pi),np.abs(H))
 plt.show()
-

@@ -230,7 +230,6 @@ elif seleccion == 'IIR':
         
         print("Eligió Chebyshov I")
 
-  
         #Wn = [1e3, 3e3]
 
         b, a = signal.cheby1(N, rp, W_n, btype, analog=False, output='ba', fs=Fs)
@@ -251,7 +250,7 @@ elif seleccion == 'IIR':
         print("Eligió Eliptico: ")
 
         #Wn = [1e3, 3e3] 
-   
+        
         b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ####################################GRÁFICOS#######################################################
