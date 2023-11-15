@@ -90,9 +90,12 @@ if seleccion == 'FIR':
         print("Eligió Enventanado")
         N = int(input("Ingrese el orden del filtro: "))          
         Wn = int(input("Ingrese la frecuencia de corte: "))  
-        Fs = 4*Wn      
-
-        h= signal.firwin(N, Wn, btype=btype, window='hann', fs=Fs)
+        
+        f1 = 200
+        f2 = 1500
+        f3 = 2000
+        f4 = 2500
+        h= signal.firwin(N, [f1, f2, f3, f4], window='hann',fs=sr) 
 
 
 #####################################CHEBYSHOV_1###################################################
