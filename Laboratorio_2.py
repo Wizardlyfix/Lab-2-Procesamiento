@@ -162,14 +162,13 @@ elif seleccion == 'IIR':
     W_n = []  # Default initialization
 
     if btype_S == 1:
-        btype = 'lowpass'  #N = 10
+        btype = 'lowpass'
         N = 10
         W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
         print(W_n)
     elif btype_S == 2:
         btype = 'highpass' 
         W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
-        #N = 10
         N = 10
     elif btype_S == 3:
         btype = 'bandpass' #N = 5 o 6
@@ -247,7 +246,7 @@ elif seleccion == 'IIR':
         print("Eligió Eliptico: ")
 
         #Wn = [1e3, 3e3] 
-        
+
         b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ####################################GRÁFICOS#######################################################
@@ -268,11 +267,19 @@ else:
 print(y)
 print(y_filtrada)
 
-#f = w*Fs/(2*np.pi)
-plt.plot(w*Fs/(2*np.pi),np.abs(H))
-plt.xlabel("Frecuencia")
+f = w*Fs/(2*np.pi)
+
+plt.plot(f, np.abs(H))
+plt.xlabel("Frecuencia [Hz]")
 plt.ylabel("Amplitud (dB)")
 plt.title("Respuesta en frecuencia de Magnitud")
+plt.show()
+
+angles = np.unwrap(np.angle(H))
+plt.plot(f, angles*180/np.pi)
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel('Fase [°]')
+plt.title("Respuesta en frecuencia de Fase")
 plt.show()
 
 
