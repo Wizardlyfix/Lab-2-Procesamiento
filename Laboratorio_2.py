@@ -173,7 +173,7 @@ elif seleccion == 'IIR':
         btype = 'bandstop' #N = 5 o 6
         N = 5
 
-    print(btype)
+    #print(btype)
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
@@ -196,11 +196,12 @@ elif seleccion == 'IIR':
         #De momento 
         #Ingrese la frecuencia de corte 1 y la f de corte 2 hay que preguntarlas al usuario
         #Si es pasa altas o pasabajas solo se pide un Wn sino se piden dos Wn
-        Wn = [4e3, 7e3] 
+        Wn = [1e3, 3e3]
         Fs = sr
 
-        #sos = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='sos')
-        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='ba')
+        b,a = signal.butter(N, Wn, btype, analog=False, output='ba', fs=Fs)
+        
+        #b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs, output='ba')
 
 #####################################CHEBYSHOV_1###################################################
             
@@ -224,25 +225,24 @@ elif seleccion == 'IIR':
         rs = int(input("Ingrese el Stopband ripple : "))         
         Fs = 4*Wn      
 
-        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+        b, a = signal.cheby2(N, Wn, btype=btype, analog=False, fs=Fs)
 
 ######################################ELIPTICO#######################################################            
         
     elif seleccion_2 == 4:
         
         print("Eligió Eliptico: ")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rs = int(input("Ingrese el Stopband ripple : "))         
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
+        Wn = [1e3, 3e3] 
+        rs = 3        
+        rp = 30 
+        Fs = rs
 
         b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
 
 
 ####################################GRÁFICOS#######################################################
 
-w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+w, H = signal.freqz(b,a) #Sacar la respuesta en frecuencia
 y_filtrada = signal.lfilter(b, a, y)
 
 Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
@@ -257,17 +257,10 @@ else:
 print(y)
 print(y_filtrada)
 
-f = w*Fs/(2*np.pi)
-
-plt.title('Digital filter frequency response')
-plt.plot(f,np.abs(H),'b') # Blue color line
-plt.ylabel('Magnitude', color='b')
-plt.xlabel('Frequency [Hz]')
-
-
-
-plt.xlim((0,20))
+#f = w*Fs/(2*np.pi)
+plt.plot(w*Fs/(2*np.pi),np.abs(H))
 plt.show()
+
 
 #Periodo para gráficar los audios
 T = 1/sr
