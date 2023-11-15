@@ -251,6 +251,9 @@ print(y_filtrada)
 
 #f = w*Fs/(2*np.pi)
 plt.plot(w*Fs/(2*np.pi),np.abs(H))
+plt.xlabel("Frecuencia")
+plt.ylabel("Amplitud (dB)")
+plt.title("Respuesta en frecuencia de Magnitud")
 plt.show()
 
 
@@ -260,8 +263,6 @@ T = 1/sr
 tam = np.size(y)
 t = np.arange(0, tam*T,T)
 
-tam1 = np.size(y_filtrada)
-t1 = np.arange(0, tam1*T,T)
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
 
@@ -271,7 +272,7 @@ ax1.set_ylabel('Amplitud')
 ax1.set_title('Audio sin filtrar')
 ax1.grid(True)
 
-ax2.plot(t1, y_filtrada, 'r')
+ax2.plot(t, y_filtrada, 'r')
 ax2.set_xlabel('Tiempo (s)')
 ax2.set_ylabel('Amplitud')
 ax2.set_title('Audio filtrado')
