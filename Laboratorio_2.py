@@ -32,7 +32,7 @@ if len(y.shape)==2:
     channel2 = y[:,1]
     y = (channel1 + channel2)/2
 
-Qtn=input("¿Desea escuchar el audio? (S/N)")
+Qtn=input("¿Desea escuchar el audio? (S/N): ")
 if Qtn=='S':
     sd.play(y, sr)
     sd.wait()
@@ -75,7 +75,7 @@ if seleccion == 'FIR':
     elif btype_S == 4:
         btype = 'bandstop'
     elif btype_S == 5:
-        #Meterle A(k) con sus correspondientes freccuencias y no esto de los "valores"
+        #Meterle A(k) con sus correspondientes frecuencias y no esto de los "valores"
         valores = ['lowpass', 'highpass', 'bandpass', 'bandstop']
         btype = np.random.choice(valores)
 
@@ -173,7 +173,11 @@ elif seleccion == 'IIR':
         btype = 'bandstop' #N = 5 o 6
         N = 5
 
-    print(btype)
+    rs = 3        
+    rp = 30
+    Fs = sr
+
+    #print(btype)
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
@@ -211,52 +215,86 @@ elif seleccion == 'IIR':
             W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
 
         # Other parameters
-        Fs = sr
+        #Fs = sr
 
         # Design the Butterworth filter
         #b, a = signal.butter(N, W_n, btype=btype, analog=False, fs=Fs, output='ba')
+        #Wn = [1e3, 3e3]
+        b, a = signal.butter(N, W_n, btype, analog=False, output='ba', fs=Fs)
 
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_2 == 2:
         
         print("Eligió Chebyshov I")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
+        W_n = []  # Default initialization
 
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        #Wn = [1e3, 3e3]
+
+        b, a = signal.cheby1(N, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ################################CHEBYSHOV II################################
     elif seleccion_2 == 3:
         
         print("Eligió Chebyshov II")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rs = int(input("Ingrese el Stopband ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.butter(N, Wn, btype=btype, analog=False, fs=Fs)
+        #Wn = [1e3, 3e3]         
+        W_n = []  # Default initialization
+
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        b,a = signal.cheby2(N, rs, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ######################################ELIPTICO#######################################################            
         
     elif seleccion_2 == 4:
         
         print("Eligió Eliptico: ")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rs = int(input("Ingrese el Stopband ripple : "))         
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.ellip(N, rp, rs, Wn, btype=btype, analog=False, fs=Fs)
+        #Wn = [1e3, 3e3] 
+        W_n = []  # Default initialization
 
+
+        if btype_S == 1:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            print(W_n)
+        elif btype_S == 2:
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        elif btype_S == 3:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+            print(W_n)
+        elif btype_S == 4:
+            W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
+        b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ####################################GRÁFICOS#######################################################
 
-"""w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+w, H = signal.freqz(b,a) #Sacar la respuesta en frecuencia
 y_filtrada = signal.lfilter(b, a, y)
 
 Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
@@ -271,25 +309,10 @@ else:
 print(y)
 print(y_filtrada)
 
-f = w*Fs/(2*np.pi)
-
-fig, ax1 = plt.subplots()
-ax1.set_title('Digital filter frequency response')
-ax1.plot(f,np.abs(H),'b') # Blue color line
-ax1.set_ylabel('Magnitude', color='b')
-ax1.set_xlabel('Frequency [Hz]')
-
-ax2 = ax1.twinx()
-
-angles = np.unwrap(np.angle(H))
-ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
-ax2.set_ylabel('Phase [°]', color='g')
-ax2.grid()
-ax2.set_xlim((0, 20))
-ax2.axis('tight')
-
-plt.xlim((0,20))
+#f = w*Fs/(2*np.pi)
+plt.plot(w*Fs/(2*np.pi),np.abs(H))
 plt.show()
+
 
 #Periodo para gráficar los audios
 T = 1/sr
@@ -315,4 +338,4 @@ ax2.set_title('Audio filtrado')
 ax2.grid(True)
 
 plt.subplots_adjust(wspace=0.5)
-plt.show()"""
+plt.show()
