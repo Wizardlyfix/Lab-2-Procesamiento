@@ -16,10 +16,13 @@ if len(y.shape)==2:
     y = (channel1 + channel2)/2
 
 
-b,a = signal.cheby2(5, 30, [1e3, 3e3], btype='bandpass', analog=False, output='ba', fs=Fs)
+b,a = signal.cheby2(5, 50, [500, 3e3], btype='bandstop', analog=False, output='ba', fs=Fs)
 #w = np.linspace(0, np.pi, int(10e3))
 w, H = signal.freqz(b,a)
-plt.plot(w*Fs/(2*np.pi),np.abs(H))
+
+y_filtrada = signal.lfilter(b, a, y)
+
+plt.plot(w*Fs/(2*np.pi), 20*np.log10(np.abs(H)))
 plt.show()
 
 angles = np.unwrap(np.angle(H))
@@ -31,8 +34,38 @@ plt.show()
 
 #####################################MAPA DE CALOR##########################################
 
-f1, t1, Sxx = signal.spectrogram(y, Fs)
-plt.pcolormesh(t1, f1, 20*np.log10(Sxx), shading='gouraud')
+f1, t1, Sxx1 = signal.spectrogram(y, Fs, scaling = 'density')
+plt.pcolormesh(t1, f1, 10*np.log10(Sxx1), shading='gouraud')
 plt.ylabel('Frequency [Hz]')
 plt.xlabel('Time [sec]')
+plt.show()
+
+f2, t2, Sxx2 = signal.spectrogram(y_filtrada, Fs, scaling = 'density')
+plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
+plt.ylabel('Frequency [Hz]')
+plt.xlabel('Time [sec]')
+plt.show()
+
+#Periodo para gráficar los audios
+T = 1/Fs
+
+tam = np.size(y)
+t = np.arange(0, tam*T,T)
+
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+
+ax1.plot(t, y, 'b')
+ax1.set_xlabel('Tiempo (s)')
+ax1.set_ylabel('Amplitud')
+ax1.set_title('Audio sin filtrar')
+ax1.grid(True)
+
+ax2.plot(t, y_filtrada, 'r')
+ax2.set_xlabel('Tiempo (s)')
+ax2.set_ylabel('Amplitud')
+ax2.set_title('Audio filtrado')
+ax2.grid(True)
+
+plt.subplots_adjust(wspace=0.5)
 plt.show()

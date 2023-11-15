@@ -161,8 +161,8 @@ elif seleccion == 'IIR':
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
     W_n = []  # Default initialization
 #####################################################################################
-    rs = 3        
-    rp = 30
+    rs = 50 
+    rp = 3.01
     Fs = sr
     if btype_S == 1:
         btype = 'lowpass'
@@ -206,11 +206,7 @@ elif seleccion == 'IIR':
                 break
             else:
                 print("Al menos uno de los valores ingresados está fuera del rango permitido. Por favor, inténtelo nuevamente.")
-    #rs = 3        
-    #rp = 30
-    #Fs = sr
 
-    #print(btype)
 
     # Lista de filtros IIR disponibles
     senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
@@ -220,48 +216,27 @@ elif seleccion == 'IIR':
         print(f"{i + 1}) {x}")
 
     seleccion_2 = int(input("Ingrese su selección: "))
-    #iW_n = []  # Default initialization
 
 ##################################BUTTER SET#######################################################  
 
     if seleccion_2 == 1:
         
         print("Eligió Butter")
-        #Nosotros definimos N
-        #N = int(input("Ingrese el orden del filtro: "))          
-        #Wn = int(input("Ingrese la frecuencia de corte: ")) 
-        #De momento 
-        #Ingrese la frecuencia de corte 1 y la f de corte 2 hay que preguntarlas al usuario
-        #Si es pasa altas o pasabajas solo se pide un Wn sino se piden dos Wn
-        #W_n = []  # Default initialization
 
-
-
-
-        # Other parameters
-        #Fs = sr
-
-        # Design the Butterworth filter
-        #b, a = signal.butter(N, W_n, btype=btype, analog=False, fs=Fs, output='ba')
-        #Wn = [1e3, 3e3]
         b, a = signal.butter(N, W_n, btype, analog=False, output='ba', fs=Fs)
 
 #####################################CHEBYSHOV_1###################################################
-            
+
     elif seleccion_2 == 2:
         
         print("Eligió Chebyshov I")
 
-        #Wn = [1e3, 3e3]
-
         b, a = signal.cheby1(N, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
-################################CHEBYSHOV II################################
+####################################CHEBYSHOV II###################################################
     elif seleccion_2 == 3:
         
         print("Eligió Chebyshov II")
-
-        #Wn = [1e3, 3e3]         
 
         b,a = signal.cheby2(N, rs, W_n, btype, analog=False, output='ba', fs=Fs)
 
@@ -271,14 +246,12 @@ elif seleccion == 'IIR':
         
         print("Eligió Eliptico: ")
 
-        #Wn = [1e3, 3e3] 
-
         b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
 ####################################GRÁFICOS#######################################################
 
 w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-w, H = signal.freqz(b,a) #Sacar la respuesta en frecuencia
+
 y_filtrada = signal.lfilter(b, a, y)
 
 Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
@@ -295,7 +268,7 @@ print(y_filtrada)
 
 f = w*Fs/(2*np.pi)
 
-plt.plot(f, np.abs(H))
+plt.plot(f, 20*np.log10(np.abs(H)))
 plt.xlabel("Frecuencia [Hz]")
 plt.ylabel("Amplitud (dB)")
 plt.title("Respuesta en frecuencia de Magnitud")
@@ -310,12 +283,17 @@ plt.show()
 
 #####################################MAPA DE CALOR##########################################
 
-f1, t1, Sxx = signal.spectrogram(y, sr)
-plt.pcolormesh(t1, f1, 20*np.log10(Sxx), shading='gouraud')
+f1, t1, Sxx = signal.spectrogram(y, sr, scaling = 'density')
+plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud')
 plt.ylabel('Frequency [Hz]')
 plt.xlabel('Time [sec]')
 plt.show()
 
+f2, t2, Sxx2 = signal.spectrogram(y_filtrada, sr, scaling = 'density')
+plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
+plt.ylabel('Frequency [Hz]')
+plt.xlabel('Time [sec]')
+plt.show()
 ###########################################################################################
 
 #Periodo para gráficar los audios
