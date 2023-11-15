@@ -310,7 +310,11 @@ plt.show()
 
 #####################################MAPA DE CALOR##########################################
 
-
+f1, t1, Sxx = signal.spectrogram(y, sr)
+plt.pcolormesh(t1, f1, 20*np.log10(Sxx), shading='gouraud')
+plt.ylabel('Frequency [Hz]')
+plt.xlabel('Time [sec]')
+plt.show()
 
 ###########################################################################################
 
