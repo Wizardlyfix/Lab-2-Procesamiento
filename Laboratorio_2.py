@@ -179,6 +179,13 @@ elif seleccion == 'IIR':
         W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
         #N = 10
         N = 10
+        while True:
+            print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            if 0 <= W_n <= Fs / 2:
+                break
+            else:
+                print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 3:
         btype = 'bandpass'
         N = 5
