@@ -159,19 +159,27 @@ elif seleccion == 'IIR':
         print(f"{i + 1}) {x}")
 
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
+    W_n = []  # Default initialization
 
     if btype_S == 1:
         btype = 'lowpass'  #N = 10
         N = 10
+        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        print(W_n)
     elif btype_S == 2:
-        btype = 'highpass'  #N = 10
+        btype = 'highpass' 
+        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        #N = 10
         N = 10
     elif btype_S == 3:
         btype = 'bandpass' #N = 5 o 6
         N = 5
+        W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+
     elif btype_S == 4:
         btype = 'bandstop' #N = 5 o 6
         N = 5
+        W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
 
     rs = 3        
     rp = 30
@@ -187,18 +195,7 @@ elif seleccion == 'IIR':
         print(f"{i + 1}) {x}")
 
     seleccion_2 = int(input("Ingrese su selección: "))
-    W_n = []  # Default initialization
-
-    if btype_S == 1:
-        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
-        print(W_n)
-    elif btype_S == 2:
-        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
-    elif btype_S == 3:
-        W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
-        print(W_n)
-    elif btype_S == 4:
-        W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
+    #iW_n = []  # Default initialization
 
 ##################################BUTTER SET#######################################################  
 
