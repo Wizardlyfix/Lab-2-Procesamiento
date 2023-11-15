@@ -160,29 +160,48 @@ elif seleccion == 'IIR':
 
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
     W_n = []  # Default initialization
-
-    if btype_S == 1:
-        btype = 'lowpass'
-        N = 10
-        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
-        print(W_n)
-    elif btype_S == 2:
-        btype = 'highpass' 
-        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
-        N = 10
-    elif btype_S == 3:
-        btype = 'bandpass' #N = 5 o 6
-        N = 5
-        W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
-
-    elif btype_S == 4:
-        btype = 'bandstop' #N = 5 o 6
-        N = 5
-        W_n = list(map(float, input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: ").split()))
-
+#####################################################################################
     rs = 3        
     rp = 30
     Fs = sr
+    if btype_S == 1:
+        btype = 'lowpass'
+        N = 10
+        while True:
+            print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+            W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            if 0 <= W_n <= Fs / 2:
+                break
+            else:
+                print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 2:
+        btype = 'highpass' 
+        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        #N = 10
+        N = 10
+    elif btype_S == 3:
+        btype = 'bandpass'
+        N = 5
+        while True:
+            print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+            W_n = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+            if all(0 <= w <= Fs / 2 for w in W_n):
+                break
+            else:
+                print("Al menos uno de los valores ingresados está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 4:
+        btype = 'bandstop'
+        N = 5
+        while True:
+            print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+            W_n = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+            if all(0 <= w <= Fs / 2 for w in W_n):
+                break
+            else:
+                print("Al menos uno de los valores ingresados está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    #rs = 3        
+    #rp = 30
+    #Fs = sr
 
     #print(btype)
 
