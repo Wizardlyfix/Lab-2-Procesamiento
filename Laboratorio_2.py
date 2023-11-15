@@ -90,7 +90,6 @@ if seleccion == 'FIR':
 
         h= signal.firwin(N, Wn, btype=btype, window='hann', fs=Fs)
 
-
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_1 == 2:
