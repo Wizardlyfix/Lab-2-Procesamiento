@@ -38,7 +38,7 @@ if Qtn=='S':
     sd.wait()
 else: 
     print("Entendido.")
-
+#asd
 # Solicitamos al usuario que seleccione el tipo de filtro FIR o IIR
 seleccion = input("Qué tipo de filtro desea aplicar, ¿FIR o IIR?: ")
 
