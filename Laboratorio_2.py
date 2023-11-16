@@ -334,7 +334,7 @@ if seleccion == 'FIR':
 
     ax1 = fig.add_subplot(gs1[0, 0])
     ax1.plot(t, y, 'b', label = 'Señal Original')
-    ax1.plot(t, y_filtrada, 'r', label = 'Señal Filtrada')
+    ax1.plot(t, y_filtrada1, 'r', label = 'Señal Filtrada')
     ax1.set_xlabel('Tiempo [s]')
     ax1.set_ylabel('Amplitud')
     ax1.set_title('Señal original y filtrada')
