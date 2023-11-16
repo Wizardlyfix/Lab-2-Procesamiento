@@ -142,7 +142,7 @@ if seleccion == 'FIR':
         
         if bandera == 1:
             N=1001        
-            h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
+            h = signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
             print(h)
         elif bandera == 2:
             #Acá se aplica el firwin2
