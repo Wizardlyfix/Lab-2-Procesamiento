@@ -284,21 +284,21 @@ elif seleccion == 'IIR':
 ####################################GRÁFICOS#######################################################
 
 if seleccion == 'FIR':
-    w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
+    w1, H1 = signal.freqz(h,1) #Sacar la respuesta en frecuencia
     ###FIRWIN2 - ARBITRARY
-    y_filtrada = signal.lfilter(h, 1,y)
-    print(y_filtrada)
+    y_filtrada1 = signal.lfilter(h, 1, y)
+    print(y_filtrada1)
     
-    f = w*sr/(2*np.pi)
+    f1 = w1*sr/(2*np.pi)
 
-    plt.plot(f, 20*np.log10(np.abs(H)))
+    plt.plot(f1, np.abs(H1))
     plt.xlabel("Frecuencia [Hz]")
     plt.ylabel("Amplitud (dB)")
     plt.title("Respuesta en frecuencia de Magnitud")
     plt.show()
 
-    angles = np.unwrap(np.angle(H))
-    plt.plot(f, angles*180/np.pi)
+    angles1 = np.unwrap(np.angle(H1))
+    plt.plot(f1, angles1*180/np.pi)
     plt.xlabel("Frecuencia [Hz]")
     plt.ylabel('Fase [°]')
     plt.title("Respuesta en frecuencia de Fase")
@@ -306,21 +306,14 @@ if seleccion == 'FIR':
 
     #####################################MAPA DE CALOR##########################################
 
-    f1, t1, Sxx = signal.spectrogram(y, sr, scaling = 'density')
-    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud')
+    f1_, t1_, Sxx_ = signal.spectrogram(y, sr, scaling = 'density')
+    plt.pcolormesh(t1_, f1_, 10*np.log10(Sxx_), shading='gouraud')
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
     plt.show()
 
-    f2, t2, Sxx2 = signal.spectrogram(y_filtrada, sr, scaling = 'density')
-    plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
-    ###########################################################################################
-
-    f1, t1, Sxx = signal.spectrogram(b,a,scaling='density')
-    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud',)
+    f2_, t2_, Sxx2_ = signal.spectrogram(y_filtrada1, sr, scaling = 'density')
+    plt.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud')
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
     plt.show()
@@ -340,7 +333,7 @@ if seleccion == 'FIR':
     ax1.set_title('Audio sin filtrar')
     ax1.grid(True)
 
-    ax2.plot(t, y_filtrada, 'r')
+    ax2.plot(t, y_filtrada1, 'r')
     ax2.set_xlabel('Tiempo (s)')
     ax2.set_ylabel('Amplitud')
     ax2.set_title('Audio filtrado')
@@ -392,14 +385,6 @@ elif seleccion == 'IIR':
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
     plt.show()
-    ###########################################################################################
-
-    f1, t1, Sxx = signal.spectrogram(b,a,scaling='density')
-    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud',)
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
-
     ############################################################################################
     #Periodo para gráficar los audios
     T = 1/sr
