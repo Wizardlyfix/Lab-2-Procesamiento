@@ -318,7 +318,7 @@ if seleccion == 'FIR':
 
     ax3 = fig.add_subplot(gs3[1, 0])
     ax3_fase = ax3.twinx()
-    ax3.plot(f1, 20*np.log10(np.abs(H)), 'b')
+    ax3.plot(f1, 20*np.log10(np.abs(H1)), 'b')
     ax3_fase.plot(f1, angles1*180/np.pi, 'r')
     ax3.set_ylabel('Magnitud [dB]', color = 'b')
     ax3_fase.set_ylabel('Fase [°]', color = 'r')
