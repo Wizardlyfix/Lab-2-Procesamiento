@@ -6,6 +6,7 @@ from IPython.display import Audio
 #import mir_eval.sonify
 import sounddevice as sd
 import soundfile as sf
+from matplotlib.gridspec import GridSpec
 
 # Preguntar al usuario si quiere que la interacción sea en inglés o en español
 idioma = input("¿Quieres que la interacción sea en inglés o en español? (inglés/español): ")
@@ -36,7 +37,7 @@ Qtn=input("¿Desea escuchar el audio? (S/N): ")
 if Qtn=='S':
     sd.play(y, sr)
     sd.wait()
-else: 
+else:
     print("Entendido.")
 #asd
 # Solicitamos al usuario que seleccione el tipo de filtro FIR o IIR
@@ -251,65 +252,72 @@ if seleccion == 'FIR':
     w1, H1 = signal.freqz(h,1) #Sacar la respuesta en frecuencia
     ###FIRWIN2 - ARBITRARY
     y_filtrada1 = signal.lfilter(h, 1, y)
-    print(y_filtrada1)
     
-    f1 = w1*sr/(2*np.pi)
-
-    plt.plot(f1, 20*np.log10(np.abs(H1)))
-    plt.xlabel("Frecuencia [Hz]")
-    plt.ylabel("Amplitud (dB)")
-    plt.title("Respuesta en frecuencia de Magnitud")
-    plt.show()
-
-    angles1 = np.unwrap(np.angle(H1))
-    plt.plot(f1, angles1*180/np.pi)
-    plt.xlabel("Frecuencia [Hz]")
-    plt.ylabel('Fase [°]')
-    plt.title("Respuesta en frecuencia de Fase")
-    plt.show()
-
-    #####################################MAPA DE CALOR##########################################
-
-    f1_, t1_, Sxx_ = signal.spectrogram(y, sr, scaling = 'density')
-    plt.pcolormesh(t1_, f1_, 10*np.log10(Sxx_), shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
-
-    f2_, t2_, Sxx2_ = signal.spectrogram(y_filtrada1, sr, scaling = 'density')
-    plt.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
-
-    ############################################################################################
-    #Periodo para gráficar los audios
-    T = 1/sr
+    T = 1/Fs
 
     tam = np.size(y)
     t = np.arange(0, tam*T,T)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+    angles1 = np.unwrap(np.angle(H1))
 
-    ax1.plot(t, y, 'b')
-    ax1.set_xlabel('Tiempo (s)')
+    f1_, t1_, Sxx_ = signal.spectrogram(y, sr, scaling = 'density')
+    f2_, t2_, Sxx2_ = signal.spectrogram(y_filtrada1, sr, scaling = 'density')
+    
+    f1 = w1*sr/(2*np.pi)
+
+    gs1 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
+    gs2 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
+    gs3 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
+    gs4 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
+
+    fig = plt.figure(figsize=(12, 7))
+
+    ax1 = fig.add_subplot(gs1[0, 0])
+    ax1.plot(t, y, 'b', label = 'Señal Original')
+    ax1.plot(t, y_filtrada, 'r', label = 'Señal Filtrada')
+    ax1.set_xlabel('Tiempo [s]')
     ax1.set_ylabel('Amplitud')
-    ax1.set_title('Audio sin filtrar')
+    ax1.set_title('Señal original y filtrada')
+    ax1.legend()
     ax1.grid(True)
 
-    ax2.plot(t, y_filtrada1, 'r')
-    ax2.set_xlabel('Tiempo (s)')
-    ax2.set_ylabel('Amplitud')
-    ax2.set_title('Audio filtrado')
-    ax2.grid(True)
+    ax2 = fig.add_subplot(gs2[0, 1])
+    ax2.pcolormesh(t1_, f1_, 10*np.log10(Sxx_), shading='gouraud')
+    ax2.set_ylabel('Frecuencia [Hz]')
+    ax2.set_xlabel('Tiempo [s]')
+    ax2.set_title('Espectrograma señal original')
 
-    plt.subplots_adjust(wspace=0.5)
+    ax3 = fig.add_subplot(gs3[1, 0])
+    ax3_fase = ax3.twinx()
+    ax3.plot(f1, 20*np.log10(np.abs(H)), 'b')
+    ax3_fase.plot(f1, angles*180/np.pi, 'r')
+    ax3.set_ylabel('Magnitud [dB]', color = 'b')
+    ax3_fase.set_ylabel('Fase [°]', color = 'r')
+    ax3.set_xlabel('Frecuencia [Hz]')
+    ax3.set_title('Respuesta en frecuencia')
+
+    ax4 = fig.add_subplot(gs4[1, 1])
+    ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud')
+    ax4.set_ylabel('Frecuencia [Hz]')
+    ax4.set_xlabel('Tiempo [s]')
+    ax4.set_title('Espectrograma señal filtrada')
+
+    plt.tight_layout()
     plt.show()
 
 elif seleccion == 'IIR':
     w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
     y_filtrada = signal.lfilter(b, a, y)
+    T = 1/Fs
+
+    tam = np.size(y)
+    t = np.arange(0, tam*T,T)
+
+    angles = np.unwrap(np.angle(H))
+
+    f1, t1, Sxx1 = signal.spectrogram(y, Fs, scaling = 'density')
+    f2, t2, Sxx2 = signal.spectrogram(y_filtrada, Fs, scaling = 'density')
 
     Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
     if Qtn == 'S':
@@ -322,52 +330,42 @@ elif seleccion == 'IIR':
 
     f = w*Fs/(2*np.pi)
 
-    plt.plot(f, 20*np.log10(np.abs(H)))
-    plt.xlabel("Frecuencia [Hz]")
-    plt.ylabel("Amplitud (dB)")
-    plt.title("Respuesta en frecuencia de Magnitud")
-    plt.show()
+    gs1 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
+    gs2 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
+    gs3 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
+    gs4 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
 
-    angles = np.unwrap(np.angle(H))
-    plt.plot(f, angles*180/np.pi)
-    plt.xlabel("Frecuencia [Hz]")
-    plt.ylabel('Fase [°]')
-    plt.title("Respuesta en frecuencia de Fase")
-    plt.show()
+    fig = plt.figure(figsize=(12, 7))
 
-    #####################################MAPA DE CALOR##########################################
-
-    f1, t1, Sxx = signal.spectrogram(y, sr, scaling = 'density')
-    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
-
-    f2, t2, Sxx2 = signal.spectrogram(y_filtrada, sr, scaling = 'density')
-    plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
-    ############################################################################################
-    #Periodo para gráficar los audios
-    T = 1/sr
-
-    tam = np.size(y)
-    t = np.arange(0, tam*T,T)
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
-
-    ax1.plot(t, y, 'b')
-    ax1.set_xlabel('Tiempo (s)')
+    ax1 = fig.add_subplot(gs1[0, 0])
+    ax1.plot(t, y, 'b', label = 'Señal Original')
+    ax1.plot(t, y_filtrada, 'r', label = 'Señal Filtrada')
+    ax1.set_xlabel('Tiempo [s]')
     ax1.set_ylabel('Amplitud')
-    ax1.set_title('Audio sin filtrar')
+    ax1.set_title('Señal original y filtrada')
+    ax1.legend()
     ax1.grid(True)
 
-    ax2.plot(t, y_filtrada, 'r')
-    ax2.set_xlabel('Tiempo (s)')
-    ax2.set_ylabel('Amplitud')
-    ax2.set_title('Audio filtrado')
-    ax2.grid(True)
+    ax2 = fig.add_subplot(gs2[0, 1])
+    ax2.pcolormesh(t1, f1, 10*np.log10(Sxx1), shading='gouraud')
+    ax2.set_ylabel('Frecuencia [Hz]')
+    ax2.set_xlabel('Tiempo [s]')
+    ax2.set_title('Espectrograma señal original')
 
-    plt.subplots_adjust(wspace=0.5)
+    ax3 = fig.add_subplot(gs3[1, 0])
+    ax3_fase = ax3.twinx()
+    ax3.plot(f, 20*np.log10(np.abs(H)), 'b')
+    ax3_fase.plot(f, angles*180/np.pi, 'r')
+    ax3.set_ylabel('Magnitud [dB]', color = 'b')
+    ax3_fase.set_ylabel('Fase [°]', color = 'r')
+    ax3.set_xlabel('Frecuencia [Hz]')
+    ax3.set_title('Respuesta en frecuencia')
+
+    ax4 = fig.add_subplot(gs4[1, 1])
+    ax4.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
+    ax4.set_ylabel('Frecuencia [Hz]')
+    ax4.set_xlabel('Tiempo [s]')
+    ax4.set_title('Espectrograma señal filtrada')
+
+    plt.tight_layout()
     plt.show()
