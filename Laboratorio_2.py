@@ -83,6 +83,7 @@ if seleccion == 'FIR':
 
     if btype_S == 1:
         btype = 'lowpass'
+        bandera = 1
         while True:
             print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
             #f_cutoff = int(input("Ingrese las frecuencias de corte separadas por comas: "))
@@ -96,6 +97,7 @@ if seleccion == 'FIR':
                 print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 2:
         btype = 'highpass' 
+        bandera = 1
         #N = 10
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
@@ -106,6 +108,7 @@ if seleccion == 'FIR':
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 3:
         btype = 'bandpass'
+        bandera = 1
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
                 #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
@@ -118,6 +121,7 @@ if seleccion == 'FIR':
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 4:
         btype = 'bandstop'
+        bandera = 1
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
                 f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
@@ -125,11 +129,8 @@ if seleccion == 'FIR':
                     break
                 else:
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
-
-
-
-
-
+    elif btype_S == 5:
+        bandera = 2
 
 
 
@@ -138,18 +139,13 @@ if seleccion == 'FIR':
     if seleccion_1 == 1:
 
         print("Eligió Enventanado")
-        #N = int(input("Ingrese el orden del filtro: "))  
-        N=1001        
-        #Wn = int(input("Ingrese la frecuencia de corte: "))  
-        #f1 = 200
-        #f2 = 1500
-        #f3 = 2000
-        #f4 = 2500###INPUTS FS/2  
-        #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-        #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
-        #LOWPASS ------ValueError: cutoff must have one element if pass_zero=="lowpass", got (2,)
-        h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
-        print(h)
+        
+        if bandera == 1:
+            N=1001        
+            h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
+            print(h)
+        elif bandera == 2:
+            #Acá se aplica el firwin2
         ###FIRWIN2 - ARBITRARY
         #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
