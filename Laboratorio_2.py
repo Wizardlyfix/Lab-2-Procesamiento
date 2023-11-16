@@ -65,8 +65,9 @@ if seleccion == 'FIR':
         print(f"{i + 1}) {x}")
 
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
+    Fs = sr
 
-    if btype_S == 1:
+    """   if btype_S == 1:
         btype = 'lowpass'
         N =10   
     elif btype_S == 2:
@@ -77,7 +78,64 @@ if seleccion == 'FIR':
         N =5  
     elif btype_S == 4:
         btype = 'bandstop'
-        N =5   
+        N =5 """  
+
+    if btype_S == 1:
+        btype = 'lowpass'
+        N = 10
+        while True:
+            print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+            #f_cutoff = int(input("Ingrese las frecuencias de corte separadas por comas: "))
+            #f_cutoff = list((float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+            f_cutoff = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+            print(f_cutoff)
+            if 0 <= f_cutoff <= Fs / 2:
+                break
+            else:
+                print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 2:
+        btype = 'highpass' 
+        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+        #N = 10
+        N = 10
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+                f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+                if 0 <= f_cutoff <= Fs / 2:
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 3:
+        btype = 'bandpass'
+        N = 5
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+                f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+                if 0 <= f_cutoff <= Fs / 2:
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 4:
+        btype = 'bandstop'
+        N = 5
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+                f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+                if 0 <= f_cutoff <= Fs / 2:
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+
+
+
+
+
+
+
 
     print(btype)
     
@@ -95,35 +153,13 @@ if seleccion == 'FIR':
         #f2 = 1500
         #f3 = 2000
         #f4 = 2500###INPUTS FS/2  
-        f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-        f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
-        h= signal.firwin(N, f_cutoff_parametros , window='hann', fs=sr, pass_zero=False) 
+        #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+        #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+        #LOWPASS ------ValueError: cutoff must have one element if pass_zero=="lowpass", got (2,)
+        h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
         print(h)
-        w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
         ###FIRWIN2 - ARBITRARY
-        y_filtrada = signal.lfilter(h, 1,y)
-        print(y_filtrada)
-        
-        f = w*sr/(2*np.pi)
-
-        fig, ax1 = plt.subplots()
-        ax1.set_title('FIR filter frequency response')
-        ax1.plot(f,np.abs(H),'b') # Blue color line
-        ax1.set_ylabel('Magnitude', color='b')
-        ax1.set_xlabel('Frequency [Hz]')
-
-        ax2 = ax1.twinx()
-
-
-        angles = np.unwrap(np.angle(H))
-        ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
-        ax2.set_ylabel('Phase [°]', color='g')
-        ax2.grid()
-        ax2.axis('tight')
-
-        plt.xlim((0,3000))
-        plt.show()
-        
+                
         
 #####################################CHEBYSHOV_1###################################################
             
