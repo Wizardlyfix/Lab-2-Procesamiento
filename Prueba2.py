@@ -15,6 +15,7 @@ if len(y.shape)==2:
     channel2 = y[:,1]
     y = (channel1 + channel2)/2
 
+N + 10
 f1 = 200
 f2 = 1500
 f3 = 2000
