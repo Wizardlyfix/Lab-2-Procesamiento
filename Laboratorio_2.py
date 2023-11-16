@@ -66,8 +66,9 @@ if seleccion == 'FIR':
         print(f"{i + 1}) {x}")
 
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
+    Fs = sr
 
-    if btype_S == 1:
+    """   if btype_S == 1:
         btype = 'lowpass'
         N =10   
     elif btype_S == 2:
@@ -78,7 +79,59 @@ if seleccion == 'FIR':
         N =5  
     elif btype_S == 4:
         btype = 'bandstop'
-        N =5   
+        N =5 """  
+
+    if btype_S == 1:
+        btype = 'lowpass'
+        while True:
+            print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+            #f_cutoff = int(input("Ingrese las frecuencias de corte separadas por comas: "))
+            #f_cutoff = list((float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+            f_cutoff = float(input(f"Ingrese una única frecuencia de corte para el filtro {btype} elegido: "))
+            #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+            print(f_cutoff)
+            if 0 <= f_cutoff <= Fs / 2:
+                break
+            else:
+                print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 2:
+        btype = 'highpass' 
+        #N = 10
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                f_cutoff = float(input(f"Ingrese una única frecuencia de corte para el filtro {btype} elegido: "))
+                if 0 <= f_cutoff <= Fs / 2:
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 3:
+        btype = 'bandpass'
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+                #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+                f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+
+                if all(0 <= w <= Fs / 2 for w in f_cutoff):
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+    elif btype_S == 4:
+        btype = 'bandstop'
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                if all(0 <= w <= Fs / 2 for w in f_cutoff):
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+
+
+
+
+
+
+
 
     print(btype)
     
@@ -92,47 +145,23 @@ if seleccion == 'FIR':
         #f2 = 1500
         #f3 = 2000
         #f4 = 2500###INPUTS FS/2  
-        f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-        f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
-        h= signal.firwin(N, f_cutoff_parametros , window='hann', fs=sr, pass_zero=False) 
+        #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+        #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+        #LOWPASS ------ValueError: cutoff must have one element if pass_zero=="lowpass", got (2,)
+        h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
         print(h)
-        w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
         ###FIRWIN2 - ARBITRARY
-        y_filtrada = signal.lfilter(h, 1,y)
-        print(y_filtrada)
-        
-        f = w*sr/(2*np.pi)
+        #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
-        fig, ax1 = plt.subplots()
-        ax1.set_title('FIR filter frequency response')
-        ax1.plot(f,np.abs(H),'b') # Blue color line
-        ax1.set_ylabel('Magnitude', color='b')
-        ax1.set_xlabel('Frequency [Hz]')
+        #y_filtrada = signal.lfilter(b, a, y)
 
-        ax2 = ax1.twinx()
-
-
-        angles = np.unwrap(np.angle(H))
-        ax2.plot(f, angles*180/np.pi, 'g') # Phase converted to degrees, and green color line
-        ax2.set_ylabel('Phase [°]', color='g')
-        ax2.grid()
-        ax2.axis('tight')
-
-        plt.xlim((0,3000))
-        plt.show()
-        
         
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_1 == 2:
         
         print("Eligió Muestreo en frecuencia")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
 
 ################################CHEBYSHOV II################################
     elif seleccion_1 == 3:
@@ -306,7 +335,7 @@ if seleccion == 'FIR':
     plt.show()
 
 elif seleccion == 'IIR':
-    w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+    w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
     y_filtrada = signal.lfilter(b, a, y)
     T = 1/sr
@@ -330,6 +359,19 @@ elif seleccion == 'IIR':
 
     f = w*Fs/(2*np.pi)
 
+    plt.plot(f, (np.abs(h)))
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel("Amplitud (dB)")
+    plt.title("Respuesta en frecuencia de Magnitud")
+    plt.show()
+    plt.twinx()
+
+    angles = np.unwrap(np.angle(h))
+    plt.plot(f, angles*180/np.pi)
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel('Fase [°]')
+    plt.title("Respuesta en frecuencia de Fase")
+    plt.show()
     gs1 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
     gs2 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
     gs3 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
@@ -352,6 +394,10 @@ elif seleccion == 'IIR':
     ax2.set_xlabel('Tiempo [s]')
     ax2.set_title('Espectrograma señal original')
 
+    plt.subplots_adjust(wspace=0.5)
+    plt.show()
+    
+    # Crear la figura y la malla de subgráficos con gridspec
     ax3 = fig.add_subplot(gs3[1, 0])
     ax3_fase = ax3.twinx()
     ax3.plot(f, 20*np.log10(np.abs(H)), 'b')
