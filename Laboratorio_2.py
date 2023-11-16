@@ -217,7 +217,7 @@ elif seleccion == 'IIR':
 ##################################BUTTER SET#######################################################  
 
     if seleccion_2 == 1:
-        
+
         print("Eligió Butter")
 
         b, a = signal.butter(N, W_n, btype, analog=False, output='ba', fs=Fs)
@@ -225,7 +225,7 @@ elif seleccion == 'IIR':
 #####################################CHEBYSHOV_1###################################################
 
     elif seleccion_2 == 2:
-        
+
         print("Eligió Chebyshov I")
 
         b, a = signal.cheby1(N, rp, W_n, btype, analog=False, output='ba', fs=Fs)
@@ -255,7 +255,7 @@ if seleccion == 'FIR':
     
     f1 = w1*sr/(2*np.pi)
 
-    plt.plot(f1, np.abs(H1))
+    plt.plot(f1, 20*np.log10(np.abs(H1)))
     plt.xlabel("Frecuencia [Hz]")
     plt.ylabel("Amplitud (dB)")
     plt.title("Respuesta en frecuencia de Magnitud")
