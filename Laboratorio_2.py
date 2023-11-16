@@ -253,7 +253,7 @@ if seleccion == 'FIR':
     ###FIRWIN2 - ARBITRARY
     y_filtrada1 = signal.lfilter(h, 1, y)
     
-    T = 1/Fs
+    T = 1/sr
 
     tam = np.size(y)
     t = np.arange(0, tam*T,T)
@@ -309,7 +309,7 @@ elif seleccion == 'IIR':
     w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
     y_filtrada = signal.lfilter(b, a, y)
-    T = 1/Fs
+    T = 1/sr
 
     tam = np.size(y)
     t = np.arange(0, tam*T,T)
