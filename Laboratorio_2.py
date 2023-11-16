@@ -82,12 +82,11 @@ if seleccion == 'FIR':
 
     if btype_S == 1:
         btype = 'lowpass'
-        N = 10
         while True:
             print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
             #f_cutoff = int(input("Ingrese las frecuencias de corte separadas por comas: "))
             #f_cutoff = list((float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
-            f_cutoff = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+            f_cutoff = float(input(f"Ingrese una única frecuencia de corte para el filtro {btype} elegido: "))
             #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
             print(f_cutoff)
             if 0 <= f_cutoff <= Fs / 2:
@@ -96,36 +95,32 @@ if seleccion == 'FIR':
                 print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 2:
         btype = 'highpass' 
-        W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
         #N = 10
-        N = 10
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-                f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+                f_cutoff = float(input(f"Ingrese una única frecuencia de corte para el filtro {btype} elegido: "))
                 if 0 <= f_cutoff <= Fs / 2:
                     break
                 else:
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 3:
         btype = 'bandpass'
-        N = 5
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-                f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
-                if 0 <= f_cutoff <= Fs / 2:
+                #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+                #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+                f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+
+                if all(0 <= w <= Fs / 2 for w in f_cutoff):
                     break
                 else:
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 4:
         btype = 'bandstop'
-        N = 5
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-                f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
-                if 0 <= f_cutoff <= Fs / 2:
+                f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                if all(0 <= w <= Fs / 2 for w in f_cutoff):
                     break
                 else:
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
@@ -155,19 +150,17 @@ if seleccion == 'FIR':
         h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
         print(h)
         ###FIRWIN2 - ARBITRARY
-                
+        #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+
+        #y_filtrada = signal.lfilter(b, a, y)
+
         
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_1 == 2:
         
         print("Eligió Muestreo en frecuencia")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rp = int(input("Ingrese el Bandpass Ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.cheby1(N, rp, Wn, btype=btype, analog=False, fs=Fs)
 
 ################################CHEBYSHOV II################################
     elif seleccion_1 == 3:
@@ -296,7 +289,6 @@ if seleccion == 'FIR':
     plt.ylabel("Amplitud (dB)")
     plt.title("Respuesta en frecuencia de Magnitud")
     plt.show()
-
     angles1 = np.unwrap(np.angle(H1))
     plt.plot(f1, angles1*180/np.pi)
     plt.xlabel("Frecuencia [Hz]")
@@ -408,3 +400,5 @@ elif seleccion == 'IIR':
 
     plt.subplots_adjust(wspace=0.5)
     plt.show()
+    
+    # Crear la figura y la malla de subgráficos con gridspec
