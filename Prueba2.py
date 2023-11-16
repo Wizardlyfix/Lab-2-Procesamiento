@@ -15,7 +15,15 @@ if len(y.shape)==2:
     channel2 = y[:,1]
     y = (channel1 + channel2)/2
 
-w, H = signal.freqz(b, a)
+f1 = 200
+f2 = 1500
+f3 = 2000
+f4 = 2500
+h= signal.firwin(N, [f1, f2, f3], window='hann',fs=sr) 
+print(h)
+w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
+
+y_filtrada = signal.lfilter(h, 1,y)
 
 y_filtrada = signal.lfilter(b, a, y)
 
