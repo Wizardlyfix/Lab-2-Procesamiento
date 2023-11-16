@@ -84,17 +84,19 @@ if seleccion == 'FIR':
     if seleccion_1 == 1:
 
         print("Eligió Enventanado")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        
-        f1 = 200
-        f2 = 1500
-        f3 = 2000
-        f4 = 2500###INPUTS FS/2  
-        h= signal.firwin(N, [f1, f2, f3, f4], window='hann',fs=sr, pass_zero=False) 
+        #N = int(input("Ingrese el orden del filtro: "))  
+        N=1001        
+        #Wn = int(input("Ingrese la frecuencia de corte: "))  
+        #f1 = 200
+        #f2 = 1500
+        #f3 = 2000
+        #f4 = 2500###INPUTS FS/2  
+        f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
+        f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
+        h= signal.firwin(N, f_cutoff_parametros , window='hann', fs=sr, pass_zero=False) 
         print(h)
         w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
-###FIRWIN2 - ARBITRARY
+        ###FIRWIN2 - ARBITRARY
         y_filtrada = signal.lfilter(h, 1,y)
         print(y_filtrada)
         
