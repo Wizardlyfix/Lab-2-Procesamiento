@@ -350,7 +350,7 @@ if seleccion == 'FIR':
     plt.show()
 
 elif seleccion == 'IIR':
-    w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+    w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
     y_filtrada = signal.lfilter(b, a, y)
 
@@ -365,13 +365,14 @@ elif seleccion == 'IIR':
 
     f = w*Fs/(2*np.pi)
 
-    plt.plot(f, 20*np.log10(np.abs(H)))
+    plt.plot(f, (np.abs(h)))
     plt.xlabel("Frecuencia [Hz]")
     plt.ylabel("Amplitud (dB)")
     plt.title("Respuesta en frecuencia de Magnitud")
     plt.show()
+    plt.twinx()
 
-    angles = np.unwrap(np.angle(H))
+    angles = np.unwrap(np.angle(h))
     plt.plot(f, angles*180/np.pi)
     plt.xlabel("Frecuencia [Hz]")
     plt.ylabel('Fase [°]')
