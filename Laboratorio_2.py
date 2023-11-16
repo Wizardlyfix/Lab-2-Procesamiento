@@ -139,10 +139,6 @@ if seleccion == 'FIR':
 
     print(btype)
     
-    #senales_1_1 = ["Enventanado", "Muestreo en Frecuencia", "Parks"]
-    #print(señales)
-    # Mostramos el menú    # Bandpass ripple
-    
     if seleccion_1 == 1:
 
         print("Eligió Enventanado")
@@ -287,79 +283,142 @@ elif seleccion == 'IIR':
 
 ####################################GRÁFICOS#######################################################
 
-w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+if seleccion == 'FIR':
+    w, H = signal.freqz(h,1) #Sacar la respuesta en frecuencia
+    ###FIRWIN2 - ARBITRARY
+    y_filtrada = signal.lfilter(h, 1,y)
+    print(y_filtrada)
+    
+    f = w*sr/(2*np.pi)
 
-y_filtrada = signal.lfilter(b, a, y)
+    plt.plot(f, 20*np.log10(np.abs(H)))
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel("Amplitud (dB)")
+    plt.title("Respuesta en frecuencia de Magnitud")
+    plt.show()
 
-Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
-if Qtn == 'S':
-    sd.play(y, sr)
-    sd.wait()
-    sd.play(y_filtrada, sr)
-    sd.wait()
-else:
-    print("Entendido.")
+    angles = np.unwrap(np.angle(H))
+    plt.plot(f, angles*180/np.pi)
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel('Fase [°]')
+    plt.title("Respuesta en frecuencia de Fase")
+    plt.show()
 
-f = w*Fs/(2*np.pi)
+    #####################################MAPA DE CALOR##########################################
 
-plt.plot(f, 20*np.log10(np.abs(H)))
-plt.xlabel("Frecuencia [Hz]")
-plt.ylabel("Amplitud (dB)")
-plt.title("Respuesta en frecuencia de Magnitud")
-plt.show()
+    f1, t1, Sxx = signal.spectrogram(y, sr, scaling = 'density')
+    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
 
-angles = np.unwrap(np.angle(H))
-plt.plot(f, angles*180/np.pi)
-plt.xlabel("Frecuencia [Hz]")
-plt.ylabel('Fase [°]')
-plt.title("Respuesta en frecuencia de Fase")
-plt.show()
+    f2, t2, Sxx2 = signal.spectrogram(y_filtrada, sr, scaling = 'density')
+    plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
+    ###########################################################################################
 
-#####################################MAPA DE CALOR##########################################
+    f1, t1, Sxx = signal.spectrogram(b,a,scaling='density')
+    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud',)
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
 
-f1, t1, Sxx = signal.spectrogram(y, sr, scaling = 'density')
-plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud')
-plt.ylabel('Frequency [Hz]')
-plt.xlabel('Time [sec]')
-plt.show()
+    ############################################################################################
+    #Periodo para gráficar los audios
+    T = 1/sr
 
-f2, t2, Sxx2 = signal.spectrogram(y_filtrada, sr, scaling = 'density')
-plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
-plt.ylabel('Frequency [Hz]')
-plt.xlabel('Time [sec]')
-plt.show()
-###########################################################################################
+    tam = np.size(y)
+    t = np.arange(0, tam*T,T)
 
-f1, t1, Sxx = signal.spectrogram(b,a,scaling='density')
-plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud',)
-plt.ylabel('Frequency [Hz]')
-plt.xlabel('Time [sec]')
-plt.show()
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
 
+    ax1.plot(t, y, 'b')
+    ax1.set_xlabel('Tiempo (s)')
+    ax1.set_ylabel('Amplitud')
+    ax1.set_title('Audio sin filtrar')
+    ax1.grid(True)
 
+    ax2.plot(t, y_filtrada, 'r')
+    ax2.set_xlabel('Tiempo (s)')
+    ax2.set_ylabel('Amplitud')
+    ax2.set_title('Audio filtrado')
+    ax2.grid(True)
 
+    plt.subplots_adjust(wspace=0.5)
+    plt.show()
 
-############################################################################################
-#Periodo para gráficar los audios
-T = 1/sr
+elif seleccion == 'IIR':
+    w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
-tam = np.size(y)
-t = np.arange(0, tam*T,T)
+    y_filtrada = signal.lfilter(b, a, y)
 
+    Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+    if Qtn == 'S':
+        sd.play(y, sr)
+        sd.wait()
+        sd.play(y_filtrada, sr)
+        sd.wait()
+    else:
+        print("Entendido.")
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+    f = w*Fs/(2*np.pi)
 
-ax1.plot(t, y, 'b')
-ax1.set_xlabel('Tiempo (s)')
-ax1.set_ylabel('Amplitud')
-ax1.set_title('Audio sin filtrar')
-ax1.grid(True)
+    plt.plot(f, 20*np.log10(np.abs(H)))
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel("Amplitud (dB)")
+    plt.title("Respuesta en frecuencia de Magnitud")
+    plt.show()
 
-ax2.plot(t, y_filtrada, 'r')
-ax2.set_xlabel('Tiempo (s)')
-ax2.set_ylabel('Amplitud')
-ax2.set_title('Audio filtrado')
-ax2.grid(True)
+    angles = np.unwrap(np.angle(H))
+    plt.plot(f, angles*180/np.pi)
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel('Fase [°]')
+    plt.title("Respuesta en frecuencia de Fase")
+    plt.show()
 
-plt.subplots_adjust(wspace=0.5)
-plt.show()
+    #####################################MAPA DE CALOR##########################################
+
+    f1, t1, Sxx = signal.spectrogram(y, sr, scaling = 'density')
+    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
+
+    f2, t2, Sxx2 = signal.spectrogram(y_filtrada, sr, scaling = 'density')
+    plt.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
+    ###########################################################################################
+
+    f1, t1, Sxx = signal.spectrogram(b,a,scaling='density')
+    plt.pcolormesh(t1, f1, 10*np.log10(Sxx), shading='gouraud',)
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
+
+    ############################################################################################
+    #Periodo para gráficar los audios
+    T = 1/sr
+
+    tam = np.size(y)
+    t = np.arange(0, tam*T,T)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,4))
+
+    ax1.plot(t, y, 'b')
+    ax1.set_xlabel('Tiempo (s)')
+    ax1.set_ylabel('Amplitud')
+    ax1.set_title('Audio sin filtrar')
+    ax1.grid(True)
+
+    ax2.plot(t, y_filtrada, 'r')
+    ax2.set_xlabel('Tiempo (s)')
+    ax2.set_ylabel('Amplitud')
+    ax2.set_title('Audio filtrado')
+    ax2.grid(True)
+
+    plt.subplots_adjust(wspace=0.5)
+    plt.show()
