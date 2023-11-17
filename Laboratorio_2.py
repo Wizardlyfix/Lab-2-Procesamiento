@@ -387,7 +387,7 @@ elif idioma == 'ingles':
         # if audio is stereo
         channel1 = y[:,0]
         channel2 = y[:,1]
-        y = (channel1 + chan?el2)/2
+        y = (channel1 + channel2)/2
 
     Qtn=input("Do you want to listen the audio? (Y/N): ")
     if Qtn=='Y':
@@ -527,54 +527,54 @@ elif idioma == 'ingles':
                 if 0 <= W_n <= Fs / 2:
                     break
                 else:
-                    print("he value entered is outside the allowed range. Please try again.")
+                    print("The value entered is outside the allowed range. Please try again.")
         elif btype_S == 2:
             btype = 'highpass' 
             #N = 10
             N = 10
             while True:
-                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                W_n = float(input(f"Ingrese la frecuencia de corte para el filtro {btype} elegido: "))
+                print(f"Please note that the income range is in the range 0--{int(Fs/2)}")
+                W_n = float(input(f"Enter a single cutoff frequency for the filter {btype} choosed: "))
                 if 0 <= W_n <= Fs / 2:
                     break
                 else:
-                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+                    print("The value entered is outside the allowed range. Please try again.")
         elif btype_S == 3:
             btype = 'bandpass'
             N = 5
             while True:
-                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                W_n = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                print(f"Please note that the income range is in the range 0--{int(Fs/2)}")
+                W_n = list(map(float, input(f"Enter the cutoff frequencies for the chosen {btype} filter (separated by space): ").split()))
                 if all(0 <= w <= Fs / 2 for w in W_n):
                     break
                 else:
-                    print("Al menos uno de los valores ingresados está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+                    print("At least one of the entered values is out of the allowed range. Please try again.")
         elif btype_S == 4:
             btype = 'bandstop'
             N = 5
             while True:
-                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                W_n = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                print(f"Please note that the income range is in the range 0--{int(Fs/2)}")
+                W_n = list(map(float, input(f"Enter the cutoff frequencies for the chosen {btype} filter (separated by space): ").split()))
                 if all(0 <= w <= Fs / 2 for w in W_n):
                     break
                 else:
-                    print("Al menos uno de los valores ingresados está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+                    print("At least one of the entered values is out of the allowed range. Please try again.")
 
 
         # Lista de filtros IIR disponibles
-        senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elíptico"]
+        senales_1 = ["Butterworth", "Chebyshov I", "Chebyshov II", "Elliptical"]
         # Mostramos el menú
-        print("Tipos de filtros IIR disponibles:")
+        print("Types of IIR filters available: ")
         for i, x in enumerate(senales_1):
             print(f"{i + 1}) {x}")
 
-        seleccion_2 = int(input("Ingrese su selección: "))
+        seleccion_2 = int(input("Enter your selection: "))
 
     ##################################BUTTER SET#######################################################  
 
         if seleccion_2 == 1:
 
-            print("Eligió Butter")
+            print("Chose Butter")
 
             b, a = signal.butter(N, W_n, btype, analog=False, output='ba', fs=Fs)
 
@@ -582,14 +582,14 @@ elif idioma == 'ingles':
 
         elif seleccion_2 == 2:
 
-            print("Eligió Chebyshov I")
+            print("Chose Chebyshov I")
 
             b, a = signal.cheby1(N, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
     ####################################CHEBYSHOV II###################################################
         elif seleccion_2 == 3:
             
-            print("Eligió Chebyshov II")
+            print("Chose Chebyshov II")
 
             b,a = signal.cheby2(N, rs, W_n, btype, analog=False, output='ba', fs=Fs)
 
@@ -597,7 +597,7 @@ elif idioma == 'ingles':
             
         elif seleccion_2 == 4:
             
-            print("Eligió Eliptico: ")
+            print("Chose Elliptical")
 
             b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
 
@@ -627,35 +627,35 @@ elif idioma == 'ingles':
         fig = plt.figure(figsize=(12, 7))
 
         ax1 = fig.add_subplot(gs1[0, 0])
-        ax1.plot(t, y, 'b', label = 'Señal Original')
-        ax1.plot(t, y_filtrada1, 'r', label = 'Señal Filtrada')
-        ax1.set_xlabel('Tiempo [s]')
-        ax1.set_ylabel('Amplitud')
-        ax1.set_title('Señal original y filtrada')
+        ax1.plot(t, y, 'b', label = 'Original Signal',)
+        ax1.plot(t, y_filtrada1, 'r', label = 'Filtered Signal')
+        ax1.set_xlabel('Time [s]')
+        ax1.set_ylabel('Amplitude')
+        ax1.set_title('Original and filtered signal')
         ax1.legend()
         ax1.grid(True)
 
         ax2 = fig.add_subplot(gs2[0, 1])
         ax2.pcolormesh(t1_, f1_, 10*np.log10(Sxx_), shading='gouraud')
-        ax2.set_ylabel('Frecuencia [Hz]')
-        ax2.set_xlabel('Tiempo [s]')
-        ax2.set_title('Espectrograma señal original')
+        ax2.set_ylabel('Frequency [Hz]')
+        ax2.set_xlabel('Time [s]')
+        ax2.set_title('Original signal spectrogram')
 
         ax3 = fig.add_subplot(gs3[1, 0])
         ax3_fase = ax3.twinx()
         ax3.plot(f1, 20*np.log10(np.abs(H1)), 'b')
         ax3_fase.plot(f1, angles1*180/np.pi, 'r')
-        ax3.set_ylabel('Magnitud [dB]', color = 'b')
-        ax3_fase.set_ylabel('Fase [°]', color = 'r')
-        ax3.set_xlabel('Frecuencia [Hz]')
-        ax3.set_title('Respuesta en frecuencia')
+        ax3.set_ylabel('Magnitude [dB]', color = 'b')
+        ax3_fase.set_ylabel('Phase [°]', color = 'r')
+        ax3.set_xlabel('Frequency [Hz]')
+        ax3.set_title('Frequency Response')
 
         ax4 = fig.add_subplot(gs4[1, 1])
         cmap = plt.colormaps["seismic"]
         ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud', cmap=cmap)
-        ax4.set_ylabel('Frecuencia [Hz]')
-        ax4.set_xlabel('Tiempo [s]')
-        ax4.set_title('Espectrograma señal filtrada')
+        ax4.set_ylabel('Frequency [Hz]')
+        ax4.set_xlabel('Time [s]')
+        ax4.set_title('Spectrogram filtered signal')
 
         plt.tight_layout()
         plt.show()
@@ -674,30 +674,17 @@ elif idioma == 'ingles':
         f1, t1, Sxx1 = signal.spectrogram(y, Fs, scaling = 'density')
         f2, t2, Sxx2 = signal.spectrogram(y_filtrada, Fs, scaling = 'density')
 
-        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
-        if Qtn == 'S':
+        f = w*Fs/(2*np.pi)
+
+        Qtn = input("Do you want to listen to the original signal and the filtered signal (Y/N): ")
+        if Qtn == 'Y':
             sd.play(y, sr)
             sd.wait()
             sd.play(y_filtrada, sr)
             sd.wait()
         else:
-            print("Entendido.")
+            print("Understood.")
 
-        f = w*Fs/(2*np.pi)
-
-        plt.plot(f, (np.abs(h)))
-        plt.xlabel("Frecuencia [Hz]")
-        plt.ylabel("Amplitud (dB)")
-        plt.title("Respuesta en frecuencia de Magnitud")
-        plt.show()
-        plt.twinx()
-
-        angles = np.unwrap(np.angle(h))
-        plt.plot(f, angles*180/np.pi)
-        plt.xlabel("Frecuencia [Hz]")
-        plt.ylabel('Fase [°]')
-        plt.title("Respuesta en frecuencia de Fase")
-        plt.show()
         gs1 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
         gs2 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
         gs3 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
@@ -706,34 +693,34 @@ elif idioma == 'ingles':
         fig = plt.figure(figsize=(12, 7))
 
         ax1 = fig.add_subplot(gs1[0, 0])
-        ax1.plot(t, y, 'b', label = 'Señal Original')
-        ax1.plot(t, y_filtrada, 'r', label = 'Señal Filtrada')
-        ax1.set_xlabel('Tiempo [s]')
-        ax1.set_ylabel('Amplitud')
-        ax1.set_title('Señal original y filtrada')
+        ax1.plot(t, y, 'b', label = 'Original Signal')
+        ax1.plot(t, y_filtrada, 'r', label = 'Filtered Signal')
+        ax1.set_xlabel('Time [s]')
+        ax1.set_ylabel('Amplitude')
+        ax1.set_title('Original and filtered signal')
         ax1.legend()
         ax1.grid(True)
 
         ax2 = fig.add_subplot(gs2[0, 1])
         ax2.pcolormesh(t1, f1, 10*np.log10(Sxx1), shading='gouraud')
-        ax2.set_ylabel('Frecuencia [Hz]')
-        ax2.set_xlabel('Tiempo [s]')
-        ax2.set_title('Espectrograma señal original')
+        ax2.set_ylabel('Frequency [Hz]')
+        ax2.set_xlabel('Time [s]')
+        ax2.set_title('Original signal spectrogram')
         
         ax3 = fig.add_subplot(gs3[1, 0])
         ax3_fase = ax3.twinx()
         ax3.plot(f, 20*np.log10(np.abs(H)), 'b')
         ax3_fase.plot(f, angles*180/np.pi, 'r')
-        ax3.set_ylabel('Magnitud [dB]', color = 'b')
-        ax3_fase.set_ylabel('Fase [°]', color = 'r')
-        ax3.set_xlabel('Frecuencia [Hz]')
-        ax3.set_title('Respuesta en frecuencia')
+        ax3.set_ylabel('Magnitude [dB]', color = 'b')
+        ax3_fase.set_ylabel('Phase [°]', color = 'r')
+        ax3.set_xlabel('Frequency [Hz]')
+        ax3.set_title('Frequency Response')
 
         ax4 = fig.add_subplot(gs4[1, 1])
         ax4.pcolormesh(t2, f2, 10*np.log10(Sxx2), shading='gouraud')
-        ax4.set_ylabel('Frecuencia [Hz]')
-        ax4.set_xlabel('Tiempo [s]')
-        ax4.set_title('Espectrograma señal filtrada')
+        ax4.set_ylabel('Frequency [Hz]')
+        ax4.set_xlabel('Time [s]')
+        ax4.set_title('Spectrogram filtered signal')
 
         plt.tight_layout()
         plt.show()
