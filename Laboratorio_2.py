@@ -9,24 +9,17 @@ import soundfile as sf
 from matplotlib.gridspec import GridSpec
 
 # Preguntar al usuario si quiere que la interacción sea en inglés o en español
-idioma = input("¿Quieres que la interacción sea en inglés o en español? (inglés/español): ")
+idioma = input("¿Quieres que la interacción sea en inglés o en español? (ingles/español): ").lower()
 
 # Permitir al usuario cargar un archivo de audio cualquiera de formato .wav
 ruta_audio = input("Ingresa la ruta del archivo de audio: ")
 
-#data, fs = sf.read('signal_disturbed.wav')
-
-#sd.play(data,fs)
-
 # Procesar el archivo de audio
 y, sr = librosa.load(ruta_audio)
 
-#sd.play(y, sr)
-#sd.wait()
 Audio(data=y, rate=sr)
 
 # switch audio to mono
-
 if len(y.shape)==2:
     # if audio is stereo
     channel1 = y[:,0]
@@ -39,7 +32,7 @@ if Qtn=='S':
     sd.wait()
 else:
     print("Entendido.")
-#asd
+
 # Solicitamos al usuario que seleccione el tipo de filtro FIR o IIR
 seleccion = input("Qué tipo de filtro desea aplicar, ¿FIR o IIR?: ")
 
@@ -68,29 +61,12 @@ if seleccion == 'FIR':
     btype_S = int(input("Ingrese el tipo de filtro que desea: "))
     Fs = sr
 
-    """   if btype_S == 1:
-        btype = 'lowpass'
-        N =10   
-    elif btype_S == 2:
-        btype = 'highpass'
-        N =10   
-    elif btype_S == 3:
-        btype = 'bandpass'
-        N =5  
-    elif btype_S == 4:
-        btype = 'bandstop'
-        N =5 """  
-
     if btype_S == 1:
         btype = 'lowpass'
         bandera = 1
         while True:
             print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-            #f_cutoff = int(input("Ingrese las frecuencias de corte separadas por comas: "))
-            #f_cutoff = list((float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
             f_cutoff = float(input(f"Ingrese una única frecuencia de corte para el filtro {btype} elegido: "))
-            #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
-            print(f_cutoff)
             if 0 <= f_cutoff <= Fs / 2:
                 break
             else:
@@ -98,7 +74,6 @@ if seleccion == 'FIR':
     elif btype_S == 2:
         btype = 'highpass' 
         bandera = 1
-        #N = 10
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
                 f_cutoff = float(input(f"Ingrese una única frecuencia de corte para el filtro {btype} elegido: "))
@@ -111,10 +86,7 @@ if seleccion == 'FIR':
         bandera = 1
         while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                #f_cutoff = input("Ingrese las frecuencias de corte separadas por comas: ")
-                #f_cutoff_parametros = [float(f) for f in f_cutoff.split(',')]
                 f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
-
                 if all(0 <= w <= Fs / 2 for w in f_cutoff):
                     break
                 else:
@@ -143,9 +115,7 @@ if seleccion == 'FIR':
         #frequencies = np.array(input("Ingrese el vector de frecuencias en Hertz (separado por espacios): ").split(), dtype=float)
         #magnitudes = np.array(input("Ingrese el vector de magnitudes lineales (números entre 0 y 1, separados por espacios): ").split(), dtype=float)
 
-
-    #print(btype)
-    
+###################################################################################################
     if seleccion_1 == 1:
 
         print("Eligió Enventanado")
@@ -157,8 +127,7 @@ if seleccion == 'FIR':
         elif bandera == 2:
             print("Eligió filtro arbitrario")
             N=1001
- 
-        
+
 #####################################CHEBYSHOV_1###################################################
             
     elif seleccion_1 == 2:
@@ -170,8 +139,6 @@ if seleccion == 'FIR':
         
         print("Eligió Parks-McClellan")
 
-
-################################################################################################################
 ##################################IIR FILTERS####################################################################
 elif seleccion == 'IIR':
 
@@ -276,7 +243,6 @@ elif seleccion == 'IIR':
 
 if seleccion == 'FIR':
     w1, H1 = signal.freqz(h,1) #Sacar la respuesta en frecuencia
-    ###FIRWIN2 - ARBITRARY
     y_filtrada1 = signal.lfilter(h, 1, y)
     
     T = 1/sr
@@ -323,8 +289,6 @@ if seleccion == 'FIR':
     ax3.set_title('Respuesta en frecuencia')
 
     ax4 = fig.add_subplot(gs4[1, 1])
-    from matplotlib import colors as c
-    #Map=c.ListedColormap(['g', 'y', 'blue'])
     cmap = plt.colormaps["seismic"]
     ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud', cmap=cmap)
     ax4.set_ylabel('Frecuencia [Hz]')
