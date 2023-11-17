@@ -131,10 +131,20 @@ if seleccion == 'FIR':
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
     elif btype_S == 5:
         bandera = 2
+        #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
+        while True:
+                print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                N=1001
+                if all(0 <= w <= Fs / 2 for w in fre_hz):
+                    break
+                else:
+                    print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+        #frequencies = np.array(input("Ingrese el vector de frecuencias en Hertz (separado por espacios): ").split(), dtype=float)
+        #magnitudes = np.array(input("Ingrese el vector de magnitudes lineales (números entre 0 y 1, separados por espacios): ").split(), dtype=float)
 
 
-
-    print(btype)
+    #print(btype)
     
     if seleccion_1 == 1:
 
@@ -145,12 +155,9 @@ if seleccion == 'FIR':
             h = signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
             print(h)
         elif bandera == 2:
-            #Acá se aplica el firwin2
-        ###FIRWIN2 - ARBITRARY
-        #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-
-        #y_filtrada = signal.lfilter(b, a, y)
-
+            print("Eligió filtro arbitrario")
+            N=1001
+ 
         
 #####################################CHEBYSHOV_1###################################################
             
@@ -159,16 +166,10 @@ if seleccion == 'FIR':
         print("Eligió Muestreo en frecuencia")
 
 
-################################CHEBYSHOV II################################
     elif seleccion_1 == 3:
         
         print("Eligió Parks-McClellan")
-        N = int(input("Ingrese el orden del filtro: "))          
-        Wn = int(input("Ingrese la frecuencia de corte: "))  
-        rs = int(input("Ingrese el Stopband ripple : "))         
-        Fs = 4*Wn      
 
-        b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
 
 ################################################################################################################
 ##################################IIR FILTERS####################################################################
@@ -322,7 +323,10 @@ if seleccion == 'FIR':
     ax3.set_title('Respuesta en frecuencia')
 
     ax4 = fig.add_subplot(gs4[1, 1])
-    ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud')
+    from matplotlib import colors as c
+    #Map=c.ListedColormap(['g', 'y', 'blue'])
+    cmap = plt.colormaps["seismic"]
+    ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud', cmap=cmap)
     ax4.set_ylabel('Frecuencia [Hz]')
     ax4.set_xlabel('Tiempo [s]')
     ax4.set_title('Espectrograma señal filtrada')
