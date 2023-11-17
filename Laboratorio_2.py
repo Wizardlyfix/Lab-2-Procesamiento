@@ -331,7 +331,7 @@ if seleccion == 'FIR':
     plt.show()
 
 elif seleccion == 'IIR':
-    w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+    w, H = signal.freqz(b, a) #Sacar la respuesta en frecuencia
 
     y_filtrada = signal.lfilter(b, a, y)
     T = 1/sr
