@@ -321,19 +321,6 @@ if idioma == 'español':
 
         f = w*Fs/(2*np.pi)
 
-        plt.plot(f, (np.abs(h)))
-        plt.xlabel("Frecuencia [Hz]")
-        plt.ylabel("Amplitud (dB)")
-        plt.title("Respuesta en frecuencia de Magnitud")
-        plt.show()
-        plt.twinx()
-
-        angles = np.unwrap(np.angle(h))
-        plt.plot(f, angles*180/np.pi)
-        plt.xlabel("Frecuencia [Hz]")
-        plt.ylabel('Fase [°]')
-        plt.title("Respuesta en frecuencia de Fase")
-        plt.show()
         gs1 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
         gs2 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
         gs3 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
@@ -599,7 +586,7 @@ elif idioma == 'ingles':
             
             print("Chose Elliptical")
 
-            b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
+            b, a = signal.ellip(N, rp, rs, W_n, btype, analog=False, output='ba', fs=Fs)
 
     ####################################GRÁFICOS#######################################################
 
