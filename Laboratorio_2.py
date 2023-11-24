@@ -101,16 +101,22 @@ if idioma == 'español':
                     else:
                         print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
         elif btype_S == 5:
-            bandera = 2
-            #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
-            while True:
-                    print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                    #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
-                    N=1001
-                    if all(0 <= w <= Fs / 2 for w in fre_hz):
-                        break
-                    else:
-                        print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+            try:
+                bandera = 2
+                #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
+                while True:
+                        print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                        #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                        N=1001
+                        fre_hz = list(map(float, input(f"Ingrese el vector de frecuencias en Hz (separadas por espacio): ").split()))
+                        magn_lin = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
+                        
+                        if all(0 <= w <= Fs / 2 for w in fre_hz):
+                            break
+                        else:
+                            print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+            except NameError: 
+                print("WARNING")
             #frequencies = np.array(input("Ingrese el vector de frecuencias en Hertz (separado por espacios): ").split(), dtype=float)
             #magnitudes = np.array(input("Ingrese el vector de magnitudes lineales (números entre 0 y 1, separados por espacios): ").split(), dtype=float)
 
@@ -118,25 +124,165 @@ if idioma == 'español':
         if seleccion_1 == 1:
 
             print("Eligió Enventanado")
-            
+        
             if bandera == 1:
                 N=1001        
-                h = signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
+                h= signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
                 print(h)
             elif bandera == 2:
                 print("Eligió filtro arbitrario")
                 N=1001
+                
+                #¿Frecuencias en Hz deben iniciar en 0 y terminar en FS/2?
+                #Fre_hz/fs
+                #LIMITAR GANACIAS
+                #np.array(fre_hz)/sr ----------> ¿necesario?
+                #h = signal.firwin2(N, np.array(fre_hz)/sr, magn_lin, window='hann', fs=sr)
+                h = signal.firwin2(N, fre_hz, magn_lin, window='hann', fs=sr)
 
-    #####################################CHEBYSHOV_1###################################################
+                print(h)
+                #Acá se aplica el firwin2
+            ###FIRWIN2 - ARBITRARY
+            #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+
+            #y_filtrada = signal.lfilter(b, a, y)
+
+    ##################################### MUESTREO EN FRECUENCIA ###################################################
                 
         elif seleccion_1 == 2:
             
             print("Eligió Muestreo en frecuencia")
 
+            cos, pi, flip = np.cos, np.pi, np.flip
+
+            # Orden del filtro
+            #M = int(input('Ingrese orden del filtro: '))
+            M=1001
+            # A(k) o respuesta en frecuencia de mag. deseada
+            #Pasabajas############################################
+            #K_=int((f_cutoff/sr)*M)#pasabajas - pasa altas
+    
+            
+            #K_=list(map(int,(f_cutoff/sr)*M))
+
+            if M%2==0:
+                len_A = int(M/2)
+                flag_inv = 0
+            else:
+                len_A = int((M+1)/2)
+                flag_inv = -1
+            
+            if btype_S ==1:
+                print("Filtro pasabajas")
+                K_=int((f_cutoff/sr)*M)
+            # A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
+            #REVISAR
+                A = np.concatenate((np.ones(K_), np.zeros(len_A - K_)))
+                
+                print(A)
+            elif btype_S==2:
+                print("Filtro pasa-altas")
+                K_=int((f_cutoff/sr)*M)
+                #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
+                #REVISAR
+                A = np.concatenate((np.zeros(K_), np.ones(len_A - K_)))
+            elif btype_S==3:
+                
+        # print(f'Ingrese A(k) con {len_A} datos')
+            #A = [1,1,1,1,.4,0,0,0]
+                print("Filtro Pasabanda")
+                fc = np.array([f_cutoff])
+                k = (fc / Fs) * M
+                
+                K_ = k.astype(int).ravel()
+                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#PASABANDA.ok
+                A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(len_A-K_[1]-1)))
+            elif btype_S==4:
+                print("Filtro rechazabanda")
+            #A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
+            #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
+                fc = np.array([f_cutoff])
+                k = (fc / Fs) * M
+                
+                K_ = k.astype(int).ravel()
+                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#RECHAZABANDA 
+                A = np.concatenate((np.ones(K_[0]), np.zeros(K_[1]-K_[0]+1), np.ones(len_A-K_[1]-1)))
+    #[0, fc,    ,fc2,0]
+
+            print(A)
+
+            #A[K_+1:]=0 #Pasabajas
+            #A[K_:]=1 #Pasaaltas
+            # Inicializamos h(n)
+            h = np.zeros(len(A))
+            # Aplicamos la fórmula
+            for n in range(len(h)):
+                sum_k = 0
+                for k in range(1,len(h)):
+                    sum_k += A[k]*(-1)**k*cos(pi*k/M*(2*n+1))
+                h[n] = 1/M*(A[0]+2*sum_k)
+            # Aplicamos espejo por la simetría
+            h_inv = flip(h[:len(h)+flag_inv])
+            # Concatenamos para crear el h(n) completo
+            h = np.concatenate((h, h_inv))
+            
+            #PRUEBA A_K
+            """        A_k=abs(fft(h))
+            k=np.arange(M)
+            
+            plt.stem(k, A_k)
+            plt.title('prueba')
+            print(h)"""
+
+################################ Parks - McClellan ################################
 
         elif seleccion_1 == 3:
             
             print("Eligió Parks-McClellan")
+            #N = int(input("Ingrese el orden del filtro: "))          
+            #Wn = int(input("Ingrese la frecuencia de corte: "))  
+            #rs = int(input("Ingrese el Stopband ripple : "))         
+            #Fs = 4*Wn   
+            N=1001 
+            trans_width = 50  #Transición de banda
+            numtaps = 1001  
+            #edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+            if btype_S==1:
+                desired=[1,0]
+                h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)         
+            elif btype_S==2:
+                desired=[0,1]
+                h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)
+                print(h)         
+            elif btype_S==3:
+                desired=[0,1,0]
+                edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+                h = signal.remez(numtaps, edges, desired, fs=sr)
+            elif btype_S==4:
+                desired=[1,0,1]
+                edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+                h = signal.remez(numtaps, edges, desired, fs=sr)
+
+                
+            #respues_mccle = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
+            #normalized_frequencies = f_cutoff / (0.5 * 1.0)
+
+            #h= signal.remez(N, normalized_frequencies, [1.0], fs=sr)
+            #print(h)
+            
+        # f_cutoff = 8000.0    # Frecuencia de corte
+            """ trans_width = 50  #Transición de banda
+            numtaps = 1001   #Orden del filtro
+            #[0,f_cutoff,fs/2]
+            #h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],
+                            # [1, 0], Hz=sr)
+                            
+            edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1],
+            f_cutoff[1] + trans_width, 0.5*sr]
+            h = signal.remez(numtaps, edges, [0,1,0], fs=sr)
+            print(h)"""
+
+            #b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
 
     ##################################IIR FILTERS####################################################################
     elif seleccion == 'IIR':
@@ -235,7 +381,7 @@ if idioma == 'español':
             
             print("Eligió Eliptico: ")
 
-            b, a = signal.ellip(N, rs, rp, W_n, btype, analog=False, output='ba', fs=Fs)
+            b, a = signal.ellip(N, rp, rs, W_n, btype, analog=False, output='ba', fs=Fs)
 
     ####################################GRÁFICOS#######################################################
 
@@ -452,16 +598,22 @@ elif idioma == 'ingles':
                 else:
                     print("The value entered is outside the allowed range. Please try again.")
         elif btype_S == 5:
-            bandera = 2
-            #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
-            while True:
-                print(f"Please note that the income range is in the range 0--{int(Fs/2)}")
-                #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
-                N=1001
-                if all(0 <= w <= Fs / 2 for w in fre_hz):
-                    break
-                else:
-                    print("The value entered is outside the allowed range. Please try again.")
+            try:
+                bandera = 2
+                #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
+                while True:
+                        print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
+                        #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                        N=1001
+                        fre_hz = list(map(float, input(f"Ingrese el vector de frecuencias en Hz (separadas por espacio): ").split()))
+                        magn_lin = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
+                        
+                        if all(0 <= w <= Fs / 2 for w in fre_hz):
+                            break
+                        else:
+                            print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+            except NameError: 
+                print("WARNING")
             #frequencies = np.array(input("Ingrese el vector de frecuencias en Hertz (separado por espacios): ").split(), dtype=float)
             #magnitudes = np.array(input("Ingrese el vector de magnitudes lineales (números entre 0 y 1, separados por espacios): ").split(), dtype=float)
 
@@ -477,17 +629,152 @@ elif idioma == 'ingles':
             elif bandera == 2:
                 print("Chose arbitrary")
                 N=1001
+                #¿Frecuencias en Hz deben iniciar en 0 y terminar en FS/2?
+                #Fre_hz/fs
+                #LIMITAR GANACIAS
+                #np.array(fre_hz)/sr ----------> ¿necesario?
+                #h = signal.firwin2(N, np.array(fre_hz)/sr, magn_lin, window='hann', fs=sr)
+                h = signal.firwin2(N, fre_hz, magn_lin, window='hann', fs=sr)
 
-    #####################################CHEBYSHOV_1###################################################
+                print(h)
+                #Acá se aplica el firwin2
+            ###FIRWIN2 - ARBITRARY
+            #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
+
+        #y_filtrada = signal.lfilter(b, a, y)
+    ##################################### FREQUENCY SAMPLING ###################################################
                 
         elif seleccion_1 == 2:
             
             print("Chose Frequency sampling")
+            cos, pi, flip = np.cos, np.pi, np.flip
 
+            # Orden del filtro
+            #M = int(input('Ingrese orden del filtro: '))
+            M=1001
+            # A(k) o respuesta en frecuencia de mag. deseada
+            #Pasabajas############################################
+            #K_=int((f_cutoff/sr)*M)#pasabajas - pasa altas
+    
+            
+            #K_=list(map(int,(f_cutoff/sr)*M))
+
+            if M%2==0:
+                len_A = int(M/2)
+                flag_inv = 0
+            else:
+                len_A = int((M+1)/2)
+                flag_inv = -1
+            
+            if btype_S ==1:
+                print("Filtro pasabajas")
+                K_=int((f_cutoff/sr)*M)
+            # A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
+            #REVISAR
+                A = np.concatenate((np.ones(K_), np.zeros(len_A - K_)))
+                
+                print(A)
+            elif btype_S==2:
+                print("Filtro pasa-altas")
+                K_=int((f_cutoff/sr)*M)
+                #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
+                #REVISAR
+                A = np.concatenate((np.zeros(K_), np.ones(len_A - K_)))
+            elif btype_S==3:
+                
+        # print(f'Ingrese A(k) con {len_A} datos')
+            #A = [1,1,1,1,.4,0,0,0]
+                print("Filtro Pasabanda")
+                fc = np.array([f_cutoff])
+                k = (fc / Fs) * M
+                
+                K_ = k.astype(int).ravel()
+                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#PASABANDA.ok
+                A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(len_A-K_[1]-1)))
+            elif btype_S==4:
+                print("Filtro rechazabanda")
+            #A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
+            #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
+                fc = np.array([f_cutoff])
+                k = (fc / Fs) * M
+                
+                K_ = k.astype(int).ravel()
+                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#RECHAZABANDA 
+                A = np.concatenate((np.ones(K_[0]), np.zeros(K_[1]-K_[0]+1), np.ones(len_A-K_[1]-1)))
+    #[0, fc,    ,fc2,0]
+
+            print(A)
+
+            #A[K_+1:]=0 #Pasabajas
+            #A[K_:]=1 #Pasaaltas
+            # Inicializamos h(n)
+            h = np.zeros(len(A))
+            # Aplicamos la fórmula
+            for n in range(len(h)):
+                sum_k = 0
+                for k in range(1,len(h)):
+                    sum_k += A[k]*(-1)**k*cos(pi*k/M*(2*n+1))
+                h[n] = 1/M*(A[0]+2*sum_k)
+            # Aplicamos espejo por la simetría
+            h_inv = flip(h[:len(h)+flag_inv])
+            # Concatenamos para crear el h(n) completo
+            h = np.concatenate((h, h_inv))
+            
+            #PRUEBA A_K
+            """        A_k=abs(fft(h))
+            k=np.arange(M)
+            
+            plt.stem(k, A_k)
+            plt.title('prueba')
+            print(h)"""
 
         elif seleccion_1 == 3:
             
             print("Chose Parks-McClellan")
+            #N = int(input("Ingrese el orden del filtro: "))          
+            #Wn = int(input("Ingrese la frecuencia de corte: "))  
+            #rs = int(input("Ingrese el Stopband ripple : "))         
+            #Fs = 4*Wn   
+            N=1001 
+            trans_width = 50  #Transición de banda
+            numtaps = 1001  
+            #edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+            if btype_S==1:
+                desired=[1,0]
+                h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)         
+            elif btype_S==2:
+                desired=[0,1]
+                h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)
+                print(h)         
+            elif btype_S==3:
+                desired=[0,1,0]
+                edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+                h = signal.remez(numtaps, edges, desired, fs=sr)
+            elif btype_S==4:
+                desired=[1,0,1]
+                edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+                h = signal.remez(numtaps, edges, desired, fs=sr)
+
+                
+            #respues_mccle = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
+            #normalized_frequencies = f_cutoff / (0.5 * 1.0)
+
+            #h= signal.remez(N, normalized_frequencies, [1.0], fs=sr)
+            #print(h)
+            
+        # f_cutoff = 8000.0    # Frecuencia de corte
+            """ trans_width = 50  #Transición de banda
+            numtaps = 1001   #Orden del filtro
+            #[0,f_cutoff,fs/2]
+            #h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],
+                            # [1, 0], Hz=sr)
+                            
+            edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1],
+            f_cutoff[1] + trans_width, 0.5*sr]
+            h = signal.remez(numtaps, edges, [0,1,0], fs=sr)
+            print(h)"""
+
+            #b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
 
     ##################################IIR FILTERS####################################################################
     elif seleccion == 'IIR':
@@ -638,8 +925,8 @@ elif idioma == 'ingles':
         ax3.set_title('Frequency Response')
 
         ax4 = fig.add_subplot(gs4[1, 1])
-        cmap = plt.colormaps["seismic"]
-        ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud', cmap=cmap)
+        #cmap = plt.colormaps["seismic"]
+        ax4.pcolormesh(t2_, f2_, 10*np.log10(Sxx2_), shading='gouraud') #, cmap=cmap)
         ax4.set_ylabel('Frequency [Hz]')
         ax4.set_xlabel('Time [s]')
         ax4.set_title('Spectrogram filtered signal')
