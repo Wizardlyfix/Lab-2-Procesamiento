@@ -141,14 +141,7 @@ if idioma == 'español':
             cos, pi, flip = np.cos, np.pi, np.flip
 
             # Orden del filtro
-            #M = int(input('Ingrese orden del filtro: '))
             M=1001
-            # A(k) o respuesta en frecuencia de mag. deseada
-            #Pasabajas############################################
-            #K_=int((f_cutoff/sr)*M)#pasabajas - pasa altas
-    
-            
-            #K_=list(map(int,(f_cutoff/sr)*M))
 
             if M%2==0:
                 len_A = int(M/2)
@@ -160,44 +153,29 @@ if idioma == 'español':
             if btype_S ==1:
                 print("Filtro pasabajas")
                 K_=int((f_cutoff/sr)*M)
-            # A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
-            #REVISAR
                 A = np.concatenate((np.ones(K_), np.zeros(len_A - K_)))
-                
-                print(A)
+                #print(A)
             elif btype_S==2:
                 print("Filtro pasa-altas")
                 K_=int((f_cutoff/sr)*M)
-                #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
-                #REVISAR
                 A = np.concatenate((np.zeros(K_), np.ones(len_A - K_)))
+            
             elif btype_S==3:
-                
-        # print(f'Ingrese A(k) con {len_A} datos')
-            #A = [1,1,1,1,.4,0,0,0]
                 print("Filtro Pasabanda")
                 fc = np.array([f_cutoff])
                 k = (fc / Fs) * M
-                
                 K_ = k.astype(int).ravel()
-                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#PASABANDA.ok
                 A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(len_A-K_[1]-1)))
             elif btype_S==4:
                 print("Filtro rechazabanda")
-            #A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
-            #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
                 fc = np.array([f_cutoff])
                 k = (fc / Fs) * M
-                
                 K_ = k.astype(int).ravel()
-                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#RECHAZABANDA 
                 A = np.concatenate((np.ones(K_[0]), np.zeros(K_[1]-K_[0]+1), np.ones(len_A-K_[1]-1)))
-    #[0, fc,    ,fc2,0]
+            #[0, fc,    ,fc2,0]
 
-            print(A)
+            #print(A)
 
-            #A[K_+1:]=0 #Pasabajas
-            #A[K_:]=1 #Pasaaltas
             # Inicializamos h(n)
             h = np.zeros(len(A))
             # Aplicamos la fórmula
@@ -212,9 +190,8 @@ if idioma == 'español':
             h = np.concatenate((h, h_inv))
             
             #PRUEBA A_K
-            """        A_k=abs(fft(h))
+            """A_k=abs(fft(h))
             k=np.arange(M)
-            
             plt.stem(k, A_k)
             plt.title('prueba')
             print(h)"""
@@ -233,41 +210,27 @@ if idioma == 'español':
             numtaps = 1001  
             #edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
             if btype_S==1:
+                #Pasa-Bajas
                 desired=[1,0]
                 h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)         
             elif btype_S==2:
+                #Pasa-Altas 
                 desired=[0,1]
                 h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)
                 print(h)         
             elif btype_S==3:
+                #Pasabanda
+                desired=[0,1,0]
+                edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
+                h = signal.remez(numtaps, edges, desired, fs=sr)
                 desired=[0,1,0]
                 edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
                 h = signal.remez(numtaps, edges, desired, fs=sr)
             elif btype_S==4:
+                #Rechazabanda
                 desired=[1,0,1]
                 edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
                 h = signal.remez(numtaps, edges, desired, fs=sr)
-
-                
-            #respues_mccle = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
-            #normalized_frequencies = f_cutoff / (0.5 * 1.0)
-
-            #h= signal.remez(N, normalized_frequencies, [1.0], fs=sr)
-            #print(h)
-            
-        # f_cutoff = 8000.0    # Frecuencia de corte
-            """ trans_width = 50  #Transición de banda
-            numtaps = 1001   #Orden del filtro
-            #[0,f_cutoff,fs/2]
-            #h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],
-                            # [1, 0], Hz=sr)
-                            
-            edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1],
-            f_cutoff[1] + trans_width, 0.5*sr]
-            h = signal.remez(numtaps, edges, [0,1,0], fs=sr)
-            print(h)"""
-
-            #b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
 
     ##################################IIR FILTERS####################################################################
     elif seleccion == 'IIR':
@@ -297,7 +260,6 @@ if idioma == 'español':
                     print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
         elif btype_S == 2:
             btype = 'highpass'
-            #N = 10
             N = 10
             while True:
                 print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
@@ -585,22 +547,18 @@ elif idioma == 'ingles':
         elif btype_S == 5:
             try:
                 bandera = 2
-                #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
                 while True:
-                        print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
-                        #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
+                        print(f"Please note that the income range is in the range 0--{int(Fs/2)}")
                         N=1001
-                        fre_hz = list(map(float, input(f"Ingrese el vector de frecuencias en Hz (separadas por espacio): ").split()))
-                        magn_lin = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
+                        fre_hz = list(map(float, input(f"Enter the vector of frequencies in Hz (space separated): ").split()))
+                        magn_lin = list(map(float, input(f"Enter the vector of linear quantities (numbers between 0 and 1 - separated by space): ").split()))
                         
                         if all(0 <= w <= Fs / 2 for w in fre_hz):
                             break
                         else:
-                            print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
+                            print("The value entered is outside the allowed range. Please try again.")
             except NameError: 
                 print("WARNING")
-            #frequencies = np.array(input("Ingrese el vector de frecuencias en Hertz (separado por espacios): ").split(), dtype=float)
-            #magnitudes = np.array(input("Ingrese el vector de magnitudes lineales (números entre 0 y 1, separados por espacios): ").split(), dtype=float)
 
     ###################################################################################################
         if seleccion_1 == 1:
@@ -610,39 +568,20 @@ elif idioma == 'ingles':
             if bandera == 1:
                 N=1001        
                 h = signal.firwin(N, f_cutoff , window='hann', fs=sr, pass_zero=btype) 
-                print(h)
+                #print(h)
             elif bandera == 2:
                 print("Chose arbitrary")
                 N=1001
-                #¿Frecuencias en Hz deben iniciar en 0 y terminar en FS/2?
-                #Fre_hz/fs
-                #LIMITAR GANACIAS
-                #np.array(fre_hz)/sr ----------> ¿necesario?
-                #h = signal.firwin2(N, np.array(fre_hz)/sr, magn_lin, window='hann', fs=sr)
                 h = signal.firwin2(N, fre_hz, magn_lin, window='hann', fs=sr)
-
-                print(h)
-                #Acá se aplica el firwin2
-            ###FIRWIN2 - ARBITRARY
-            #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-
-        #y_filtrada = signal.lfilter(b, a, y)
+                #print(h)
     ##################################### FREQUENCY SAMPLING ###################################################
                 
         elif seleccion_1 == 2:
             
-            print("Chose Frequency sampling")
+            print("Chose Frequency Sampling")
             cos, pi, flip = np.cos, np.pi, np.flip
-
             # Orden del filtro
-            #M = int(input('Ingrese orden del filtro: '))
             M=1001
-            # A(k) o respuesta en frecuencia de mag. deseada
-            #Pasabajas############################################
-            #K_=int((f_cutoff/sr)*M)#pasabajas - pasa altas
-    
-            
-            #K_=list(map(int,(f_cutoff/sr)*M))
 
             if M%2==0:
                 len_A = int(M/2)
@@ -652,46 +591,28 @@ elif idioma == 'ingles':
                 flag_inv = -1
             
             if btype_S ==1:
-                print("Filtro pasabajas")
+                print("Lowpass Filter")
                 K_=int((f_cutoff/sr)*M)
-            # A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
-            #REVISAR
                 A = np.concatenate((np.ones(K_), np.zeros(len_A - K_)))
-                
-                print(A)
             elif btype_S==2:
-                print("Filtro pasa-altas")
+                print("Highpass Filter")
                 K_=int((f_cutoff/sr)*M)
-                #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
-                #REVISAR
                 A = np.concatenate((np.zeros(K_), np.ones(len_A - K_)))
             elif btype_S==3:
-                
-        # print(f'Ingrese A(k) con {len_A} datos')
-            #A = [1,1,1,1,.4,0,0,0]
-                print("Filtro Pasabanda")
+                print("Bandpass Filter")
                 fc = np.array([f_cutoff])
                 k = (fc / Fs) * M
-                
                 K_ = k.astype(int).ravel()
-                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#PASABANDA.ok
                 A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(len_A-K_[1]-1)))
             elif btype_S==4:
-                print("Filtro rechazabanda")
-            #A= np.concatenate((np.ones(int(len_A/2)), np.zeros(int(len_A/2))))#Pasabajas
-            #A= np.concatenate((np.zeros(int(len_A/2)), np.ones(int(len_A/2))))#Pasaaltas
+                print("Bandstop Filter")
                 fc = np.array([f_cutoff])
                 k = (fc / Fs) * M
-                
                 K_ = k.astype(int).ravel()
-                #A = np.concatenate((np.zeros(K_[0]), np.ones(K_[1]-K_[0]+1), np.zeros(int(M/2-K_[1]-1))))#RECHAZABANDA 
                 A = np.concatenate((np.ones(K_[0]), np.zeros(K_[1]-K_[0]+1), np.ones(len_A-K_[1]-1)))
     #[0, fc,    ,fc2,0]
+            #print(A)
 
-            print(A)
-
-            #A[K_+1:]=0 #Pasabajas
-            #A[K_:]=1 #Pasaaltas
             # Inicializamos h(n)
             h = np.zeros(len(A))
             # Aplicamos la fórmula
@@ -706,9 +627,8 @@ elif idioma == 'ingles':
             h = np.concatenate((h, h_inv))
             
             #PRUEBA A_K
-            """        A_k=abs(fft(h))
+            """A_k=abs(fft(h))
             k=np.arange(M)
-            
             plt.stem(k, A_k)
             plt.title('prueba')
             print(h)"""
@@ -716,55 +636,33 @@ elif idioma == 'ingles':
         elif seleccion_1 == 3:
             
             print("Chose Parks-McClellan")
-            #N = int(input("Ingrese el orden del filtro: "))          
-            #Wn = int(input("Ingrese la frecuencia de corte: "))  
-            #rs = int(input("Ingrese el Stopband ripple : "))         
-            #Fs = 4*Wn   
             N=1001 
             trans_width = 50  #Transición de banda
             numtaps = 1001  
-            #edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
             if btype_S==1:
+                #Pasa-Bajas
                 desired=[1,0]
                 h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)         
             elif btype_S==2:
+                #Pasa-Altas
                 desired=[0,1]
                 h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],desired, Hz=sr)
                 print(h)         
             elif btype_S==3:
+                #Pasabandas
                 desired=[0,1,0]
                 edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
                 h = signal.remez(numtaps, edges, desired, fs=sr)
             elif btype_S==4:
+                #Rechazabandas
                 desired=[1,0,1]
                 edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
                 h = signal.remez(numtaps, edges, desired, fs=sr)
 
-                
-            #respues_mccle = list(map(float, input(f"Ingrese el vector de magnitudes lineales (números entre 0 y 1 - separadas por espacio): ").split()))
-            #normalized_frequencies = f_cutoff / (0.5 * 1.0)
-
-            #h= signal.remez(N, normalized_frequencies, [1.0], fs=sr)
-            #print(h)
-            
-        # f_cutoff = 8000.0    # Frecuencia de corte
-            """ trans_width = 50  #Transición de banda
-            numtaps = 1001   #Orden del filtro
-            #[0,f_cutoff,fs/2]
-            #h = signal.remez(numtaps, [0, f_cutoff, f_cutoff + trans_width, 0.5*sr],
-                            # [1, 0], Hz=sr)
-                            
-            edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1],
-            f_cutoff[1] + trans_width, 0.5*sr]
-            h = signal.remez(numtaps, edges, [0,1,0], fs=sr)
-            print(h)"""
-
-            #b, a = signal.cheby2(N, rs, Wn, btype=btype, analog=False, fs=Fs)
-
     ##################################IIR FILTERS####################################################################
     elif seleccion == 'IIR':
 
-        ################################################################
+    #####################################################################################
         btype_filtros = ["Lowpass", "Highpass", "Bandpass", "Bandstop", "Arbitrary"]
 
         print("Available filters: ")
@@ -789,7 +687,6 @@ elif idioma == 'ingles':
                     print("The value entered is outside the allowed range. Please try again.")
         elif btype_S == 2:
             btype = 'highpass' 
-            #N = 10
             N = 10
             while True:
                 print(f"Please note that the income range is in the range 0--{int(Fs/2)}")
