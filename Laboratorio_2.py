@@ -103,7 +103,6 @@ if idioma == 'español':
         elif btype_S == 5:
             try:
                 bandera = 2
-                #####¿LIMITACIÓN EN ARBITRARIO HASTA FS/2?
                 while True:
                         print(f"Tenga en cuenta que el rango de ingreso está en el rango 0--{int(Fs/2)}")
                         #f_cutoff = list(map(float, input(f"Ingrese las frecuencias de corte para el filtro {btype} elegido (separadas por espacio): ").split()))
@@ -117,10 +116,8 @@ if idioma == 'español':
                             print("El valor ingresado está fuera del rango permitido. Por favor, inténtelo nuevamente.")
             except NameError: 
                 print("WARNING")
-            #frequencies = np.array(input("Ingrese el vector de frecuencias en Hertz (separado por espacios): ").split(), dtype=float)
-            #magnitudes = np.array(input("Ingrese el vector de magnitudes lineales (números entre 0 y 1, separados por espacios): ").split(), dtype=float)
 
-    ###################################################################################################
+    ############################################### ENVENTANADO #######################################################
         if seleccion_1 == 1:
 
             print("Eligió Enventanado")
@@ -132,20 +129,8 @@ if idioma == 'español':
             elif bandera == 2:
                 print("Eligió filtro arbitrario")
                 N=1001
-                
-                #¿Frecuencias en Hz deben iniciar en 0 y terminar en FS/2?
-                #Fre_hz/fs
-                #LIMITAR GANACIAS
-                #np.array(fre_hz)/sr ----------> ¿necesario?
-                #h = signal.firwin2(N, np.array(fre_hz)/sr, magn_lin, window='hann', fs=sr)
                 h = signal.firwin2(N, fre_hz, magn_lin, window='hann', fs=sr)
-
-                print(h)
-                #Acá se aplica el firwin2
-            ###FIRWIN2 - ARBITRARY
-            #w, h = signal.freqz(b, a) #Sacar la respuesta en frecuencia
-
-            #y_filtrada = signal.lfilter(b, a, y)
+                #print(h)
 
     ##################################### MUESTREO EN FRECUENCIA ###################################################
                 
