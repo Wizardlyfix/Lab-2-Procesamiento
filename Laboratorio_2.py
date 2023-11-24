@@ -201,14 +201,9 @@ if idioma == 'español':
         elif seleccion_1 == 3:
             
             print("Eligió Parks-McClellan")
-            #N = int(input("Ingrese el orden del filtro: "))          
-            #Wn = int(input("Ingrese la frecuencia de corte: "))  
-            #rs = int(input("Ingrese el Stopband ripple : "))         
-            #Fs = 4*Wn   
             N=1001 
             trans_width = 50  #Transición de banda
             numtaps = 1001  
-            #edges = [0, f_cutoff[0] - trans_width, f_cutoff[0], f_cutoff[1], f_cutoff[1] + trans_width, 0.5*sr]
             if btype_S==1:
                 #Pasa-Bajas
                 desired=[1,0]
@@ -345,6 +340,15 @@ if idioma == 'español':
 
         f1_, t1_, Sxx_ = signal.spectrogram(y, sr, scaling = 'density')
         f2_, t2_, Sxx2_ = signal.spectrogram(y_filtrada1, sr, scaling = 'density')
+
+        Qtn = input("¿Desea escuchar la señal original y la señal filtrada? (S/N): ")
+        if Qtn == 'S':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada1, sr)
+            sd.wait()
+        else:
+            print("Entendido.")
         
         f1 = w1*sr/(2*np.pi)
 
