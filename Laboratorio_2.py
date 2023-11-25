@@ -779,6 +779,15 @@ elif idioma == 'ingles':
         
         f1 = w1*sr/(2*np.pi)
 
+        Qtn = input("Do you want to listen to the original signal and the filtered signal (Y/N): ")
+        if Qtn == 'Y':
+            sd.play(y, sr)
+            sd.wait()
+            sd.play(y_filtrada1, sr)
+            sd.wait()
+        else:
+            print("Understood.")
+
         gs1 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
         gs2 = GridSpec(2, 2, height_ratios=[1, 1], width_ratios=[1,1])
         gs3 = GridSpec(2, 2, height_ratios=[2/3, 1], width_ratios=[1,1])
